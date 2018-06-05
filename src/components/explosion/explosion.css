@@ -1,0 +1,33 @@
+/* 固定高度，当里面的内容大于这个高度时，有滚动条出现 */
+
+.treeContainer {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 24px;
+  height: 500px;
+}
+
+/* 固定高度，当里面的内容大于这个高度时，有滚动条出现 */
+
+.listContainer {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 24px;
+  height: 500px;
+}
+
+/* 子元素右边框和父元素右边框对齐 */
+
+.alignRight {
+  /* margin-left: auto;
+  margin-right: 0; */
+  float: right
+}
+
+/*  子元素占全部父元素宽度 */
+
+.fullWidth {
+  width: 100%
+}

@@ -1,0 +1,13 @@
+/* 导航栏，每个元素是一个 link，并排显示 */
+
+.znav {
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 16px;
+  background: #f8f8f8;
+}
+
+.znav a {
+  line-height: 30px;
+  padding: 0 8px;
+}
