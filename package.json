@@ -1,10 +1,12 @@
 {
-  "name": "my-app",
+  "name": "xslate",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/relativepath",
   "dependencies": {
+    "ali-oss": "^5.2.0",
     "antd": "^3.6.1",
+    "axios": "^0.18.0",
+    "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^23.0.0",
+    "@types/lodash": "^4.14.109",
     "@types/moment": "^2.13.0",
     "@types/node": "^10.3.0",
     "@types/react": "^16.3.16",
@@ -29,5 +32,13 @@
     "@types/react-router": "^4.0.26",
     "@types/react-router-dom": "^4.2.7",
     "typescript": "^2.9.1"
+  },
+  "proxy": {
+    "/Markor": {
+      "target": "http://120.27.153.97:8080/"
+    },
+    "/api": {
+      "target": "http://localhost:8080/"
+    }
   }
 }

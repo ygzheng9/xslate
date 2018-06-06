@@ -11,6 +11,11 @@ import { OrderMgmt } from "./components/orderDelivery";
 // 多语言演示
 import Intl from "./intlDemo";
 
+// axios
+// import PersonList from "./components/collections/dummy";
+
+import ThreadMgmt from "./components/collections/threadsMgmt";
+
 import "./App.css";
 
 const App = () => (
@@ -20,6 +25,7 @@ const App = () => (
         <Link to="/">爆炸图</Link>
         <Link to="/orderMgmt">发货单</Link>
         <Link to="/intl">多语言</Link>
+        <Link to="/person">用户</Link>
       </div>
 
       <Switch>
@@ -27,6 +33,7 @@ const App = () => (
         <Route path="/explosion/:projectNo" component={Explosion} />
         <Route path="/orderMgmt" component={OrderMgmt} />
         <Route path="/intl" component={Intl} />
+        <Route path="/person" component={ThreadMgmt} />
 
         <Route component={CategoryList} />
       </Switch>
