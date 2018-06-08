@@ -59,7 +59,6 @@ export default {
       });
 
       const res = yield axios.post(loginUrl, loginParam);
-
       const data: IAPIRtnObject = res.data as IAPIRtnObject;
 
       if (data.errors[0].statusMessage !== "SUCCESS") {
@@ -78,6 +77,7 @@ export default {
         const token = loginInfo.token;
         // 全局设置
         axios.defaults.headers.common.Authorization = token;
+        console.log("token: ", token);
 
         yield put({
           type: "updateState",

@@ -90,6 +90,74 @@ export interface IAppLogin {
   token: string;
 }
 
+// 产品库
+
+// 固定死的 3 级 ，value = grouping ，同时 name 是下一级的 name
+export interface IAPIProductGroup {
+  updatedAt: string;
+  id: string;
+  objectId: string;
+  grouping?: string;
+  name: string;
+  value: string;
+}
+
+export interface IAPIProduct {
+  attributes?: IAPIProductAttribute[];
+  brand?: string;
+  brandName?: any;
+  catalogNumber: string;
+  category?: string;
+  createdAt: string;
+  department: string;
+  detail: string;
+  event: string;
+  id: string;
+  lifeStyleName?: any;
+  images?: IAPIImage[];
+  manufacturer: string;
+  name: string;
+  objectId: string;
+  price: number;
+  priceUnit: string;
+  productClass: string;
+  productSubclass: string;
+  rating?: number;
+  section: string;
+  series: string;
+  updateTimeStamp: number;
+  updatedAt: string;
+  vendorNumber: string;
+  vendorProductNumber: string;
+  marketDate?: any;
+  minNumber?: any;
+  planDate?: any;
+  status: string;
+  abcType: string;
+  netWeight?: any;
+  originCountry: string;
+  packageVolume?: any;
+  sizeDescription: string;
+  sizeHeight?: any;
+  sizeLong?: any;
+  sizeWidth?: any;
+  retailPrice?: any;
+  isdeleted: string;
+}
+
+export interface IAPIProductAttribute {
+  id: string;
+  name: string;
+  product: string;
+  values: IAPIAttrValue[];
+}
+
+export interface IAPIAttrValue {
+  attribute: string;
+  id: string;
+  value: string;
+}
+
 // 全局信息
 export interface IMarkorAppStates {
   // 是否正在加载数据

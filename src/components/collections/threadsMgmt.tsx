@@ -13,8 +13,6 @@ import "./markor.css";
 
 import { IAPIMessage, IAPIThread } from "./types";
 
-import "./threadsMgmt.css";
-
 // Thread 层级浏览的导航栏
 interface IViewPathProps {
   paths: IAPIThread[];
