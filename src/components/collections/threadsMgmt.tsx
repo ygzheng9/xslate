@@ -1,13 +1,13 @@
 import * as React from "react";
 
-import { Breadcrumb, Col, message, Row } from "antd";
+import { Breadcrumb, Button, Col, Row } from "antd";
+
+import { connect } from "dva";
 
 import * as _ from "lodash";
 import * as moment from "moment";
 
 import OSS from "ali-oss";
-
-import axios from "axios";
 
 import "./markor.css";
 
@@ -129,14 +129,8 @@ const RenderMessages = ({
 
 // 浏览 Thread，以及其下的子目录，具体的 Messages
 interface IThreadsMgmtStates {
-  // 所有项目清单，项目是自包含的层级关系，objectaId 和 parentthread
-  threads: IAPIThread[];
-
   // 浏览的目录，最后一个是当前选中的 Thread
   viewPath: IAPIThread[];
-
-  // 所有 messages
-  messages: IAPIMessage[];
 }
 
 class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
@@ -159,55 +153,9 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
     fullPath.push(naThread);
 
     this.state = {
-      threads: [] as IAPIThread[],
-      viewPath: fullPath,
-      messages: [] as IAPIMessage[]
+      viewPath: fullPath
     };
   }
-
-  public async componentDidMount() {
-    // const { setLoadingInfo } = this.props;
-
-    // setLoadingInfo(true, "加载中", "请稍后", "正在从服务器获取信息....");
-
-    // 全部加载 Threads 和 Messages
-    Promise.all([this.getThreads(), this.getMessages()]).then(
-      ([res1, res2]) => {
-        // 处理 threads
-        const threads = res1.data.content[0].results as IAPIThread[];
-        // flag = 0 代表有效项目
-        const validThreads = threads.filter(t => t.flag === 0);
-
-        // 处理 Messages
-        const messages = res2.data.content[0].results as IAPIMessage[];
-        // flag = 0 代表有效项目
-        const validMessages = messages.filter(
-          t => t.flag === 0 && t.documentType === "data"
-        );
-
-        this.setState({
-          threads: validThreads,
-          messages: validMessages
-        });
-
-        // setLoadingInfo(false);
-
-        message.info("数据加载完毕");
-      }
-    );
-  }
-
-  // 获取“数据库”中的项目列表
-  public getThreads = () => {
-    const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
-    return axios.get(threadsUrl);
-  };
-
-  // 获取所有 message 信息
-  public getMessages = () => {
-    const messagesUrl = `/Markor/adapters/Message/messages?offset=&limit=&timeStamp=0`;
-    return axios.get(messagesUrl);
-  };
 
   // 选中一个 Thread 后，进入下一级
   public selectThread = (thread: IAPIThread) => () => {
@@ -246,7 +194,8 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   };
 
   public render() {
-    const { threads, messages, viewPath } = this.state;
+    const { threads, messages } = this.props;
+    const { viewPath } = this.state;
     const currThread = viewPath[viewPath.length - 1];
 
     // 显示浏览路径
@@ -270,6 +219,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
     return (
       <div>
         <ViewPath {...viewPathProps} />
+        <Button onClick={this.props.loadAllData}>{"刷新"}</Button>
         <div style={{ background: "#fff", padding: 24, minHeight: 600 }}>
           <RenderThread {...threadsProps} />
           <RenderMessages {...messagesProps} />
@@ -279,4 +229,30 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   }
 }
 
-export default ThreadsMgmt;
+function mapStateToProps(store: any) {
+  const { markorApp } = store;
+  const { threads, messages } = markorApp;
+
+  return {
+    threads,
+    messages
+  };
+}
+
+// 把 dispatch 映射到组件的属性，这样组件中就可以不出现 dispatch 了
+// 注意，这里定义的都是 func，而不是一个 dispatch 调用；
+function mapDispatchToProps(dispatch: any) {
+  return {
+    // 根据 ref 查找变更记录
+    loadAllData: () => {
+      dispatch({
+        type: "markorApp/loadThreads"
+      });
+    }
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ThreadsMgmt);
