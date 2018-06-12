@@ -4,15 +4,44 @@ import { message } from "antd";
 
 import axios from "axios";
 
+import OSS from "ali-oss";
+
 import {
+  EffectsCommandMap,
+  IDvaAction,
+  Model,
+  SubscriptionAPI
+} from "@models/types";
+
+import {
+  IAPIAssortment,
   IAPILoginInfo,
   IAPIMessage,
+  IAPIProduct,
+  IAPIProductGroup,
   IAPIRtnObject,
   IAPIThread,
+  IAPIUser,
   IMarkorUser
 } from "@components/collections/types";
 
-export default {
+// 建立 ali-oss 的客户端
+const client = new OSS({
+  accessKeyId: "LTAIJuSjXPx3B35m",
+  accessKeySecret: "5nz7Blk9nIr2R11Tss7FOVU5pk5cPJ",
+  region: "oss-cn-shanghai",
+  bucket: "ordercommit"
+});
+
+// 建立 ali-oss 的客户端，在线商品信息
+const existClient = new OSS.Wrapper({
+  accessKeyId: "LTAIJuSjXPx3B35m",
+  accessKeySecret: "5nz7Blk9nIr2R11Tss7FOVU5pk5cPJ",
+  region: "oss-cn-hangzhou",
+  bucket: "mfrwxoss"
+});
+
+const model: Model = {
   namespace: "markorApp",
   state: {
     // 全局的加载信息
@@ -29,17 +58,37 @@ export default {
     // 全部的 Threads, Messages
     // 所有项目清单，项目是自包含的层级关系，objectaId 和 parentthread
     threads: [],
-    messages: []
+    messages: [],
+
+    // ali-oss 客户端
+    client,
+
+    // 在线商品的 ali-oss 客户端
+    existClient,
+
+    // 产品组
+    allGroups: [] as IAPIProductGroup[],
+
+    // 备选库
+    allProducts: [] as IAPIProduct[],
+
+    // 在线商品 assortment，其下有 products
+    assortments: [] as IAPIAssortment[],
+
+    // 用户清单
+    allUsers: [] as IAPIUser[]
   },
 
   reducers: {
-    updateState(state: any, action: any) {
+    updateState(state, action: IDvaAction) {
       return { ...state, ...action.payload };
     }
   },
 
   effects: {
-    *login(action: any, { put }: { put: any }) {
+    *login(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put } = effects;
+
       const loginUrl = "/Markor/adapters/Employee/login";
 
       // 替换成界面输入的用户名和密码
@@ -48,6 +97,30 @@ export default {
       };
       console.log("loginParam: ", loginParam);
 
+      const debug = true;
+      if (debug) {
+        const token = "C9383C442F5FEAA38483A820A027A5EA11FF73A7";
+        axios.defaults.headers.common.Authorization = token;
+        yield put({
+          type: "updateState",
+          payload: {
+            zLoading: false,
+
+            isLogin: true,
+            user: loginParam,
+            token
+          }
+        });
+
+        // 跳转页面
+        yield put(routerRedux.replace("/"));
+
+        message.success("登录成功");
+
+        return;
+      }
+
+      // debug = false;
       yield put({
         type: "updateState",
         payload: {
@@ -91,14 +164,33 @@ export default {
         });
 
         // 跳转页面
-        yield put(routerRedux.replace("/markor"));
+        yield put(routerRedux.replace("/"));
 
         message.success("登录成功");
       }
     },
 
+    *logout(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put } = effects;
+
+      yield put({
+        type: "updateState",
+        payload: {
+          zLoading: false,
+
+          isLogin: false,
+          user: {},
+          token: ""
+        }
+      });
+      // 跳转页面
+      yield put(routerRedux.replace("/"));
+    },
+
     // 加载 threads， messages
-    *loadThreads(action: any, { put }: { put: any }) {
+    *loadThreads(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put } = effects;
+
       const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
       const messagesUrl = `/Markor/adapters/Message/messages?offset=&limit=&timeStamp=0`;
 
@@ -139,18 +231,131 @@ export default {
       });
 
       message.success("数据加载成功");
+    },
+
+    *testEffect(action: IDvaAction, effects: EffectsCommandMap) {
+      console.log("action: ", action);
+      console.log("param: ", effects);
+      const url = "/Markor/adapters/Setting/setting?limit=1000";
+
+      yield axios.get(url);
+
+      console.log("done");
+    },
+
+    *loadProducts(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put } = effects;
+
+      const groupsUrl = `/Markor/adapters/Setting/setting?limit=1000`;
+      const productsUrl = `/Markor/adapters/Product/products?offset=1&limit=100&timeStamp=0`;
+      const assortUrl = `/Markor/adapters/Product/assortments`;
+
+      yield put({
+        type: "updateState",
+        payload: {
+          zLoading: true,
+          loadingdescription: "请稍后",
+          loadingMessage: "准备中",
+          loadingTip: "正在获取数据库中的信息....."
+        }
+      });
+
+      const [res1, res2, res3] = yield Promise.all([
+        axios.get(groupsUrl),
+        axios.get(productsUrl),
+        axios.get(assortUrl)
+      ]);
+
+      if (
+        res1.statusText === undefined ||
+        res1.statusText !== "OK" ||
+        res2.statusText === undefined ||
+        res2.statusText !== "OK" ||
+        res3.statusText === undefined ||
+        res3.statusText !== "OK"
+      ) {
+        message.error("网络故障，请稍后重试");
+
+        yield put({
+          type: "updateState",
+          payload: {
+            zLoading: false
+          }
+        });
+        return;
+      }
+
+      // 产品组
+      const allGroups = res1.data.content as IAPIProductGroup[];
+
+      // 备选商品
+      const allProducts = res2.data.content[0].results as IAPIProduct[];
+
+      // 在线商品
+      const assortments = res3.data.content[0].results as IAPIAssortment[];
+
+      console.log(assortments);
+
+      yield put({
+        type: "updateState",
+        payload: {
+          zLoading: false,
+          allGroups,
+          allProducts,
+          assortments
+        }
+      });
+
+      message.success("数据加载成功");
+    },
+
+    *loadAllUsers(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put } = effects;
+      const url = `/Markor/adapters/Employee/employees`;
+
+      const result = yield axios.get(url);
+      console.log(result);
+
+      if (result.statusText === undefined || result.statusText !== "OK") {
+        message.error("网络故障，请稍后重试");
+        return;
+      }
+
+      const users = result.data.content as IAPIUser[];
+      console.log("users: ", users);
+
+      yield put({
+        type: "updateState",
+        payload: {
+          allUsers: users
+        }
+      });
+
+      message.info("用户列表加载完毕");
     }
   },
 
   subscriptions: {
-    setup({ dispatch, history }: { dispatch: any; history: any }) {
+    setup(api: SubscriptionAPI) {
+      const { history } = api;
       // console.log('common model subscriptions:', dispatch, history)
+      // 数据库界面
       history.listen((location: any) => {
-        if (location.pathname === "/markor") {
+        if (location.pathname === "/threads") {
           // 加载
-          dispatch({ type: "loadThreads" });
+          // dispatch({ type: "loadThreads" });
+          console.log("to threads...");
+        }
+      });
+      history.listen((location: any) => {
+        if (location.pathname === "/products") {
+          // 加载
+          // dispatch({ type: "loadProducts" });
+          console.log("to products...");
         }
       });
     }
   }
 };
+
+export default model;

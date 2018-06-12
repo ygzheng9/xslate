@@ -2,8 +2,6 @@ import * as React from "react";
 
 import { connect } from "dva";
 
-import { Redirect, Route, Router, Switch } from "dva/router";
-
 import { Alert, Spin } from "antd";
 
 // 登录界面
@@ -21,19 +19,10 @@ const MarkorApp = (props: any) => {
     loadingTip,
     loadingMessage,
 
-    zLoading,
+    zLoading
 
-    history
+    // history
   } = props;
-
-  // 判断 登录状态，如果未登录则跳转到 登录界面
-  const LoginGuard = (Comp: any) => () => {
-    if (isLogin) {
-      return <Comp />;
-    } else {
-      return <Redirect to="/login" />;
-    }
-  };
 
   // 显示加载的等待状态
   const loadingInfo = () => {
@@ -54,19 +43,12 @@ const MarkorApp = (props: any) => {
 
   const loadingInfoTag = loadingInfo();
 
-  const MarkorMain = LoginGuard(MarkorLayout);
+  const Page = isLogin ? MarkorLayout : Login;
 
   return (
     <div>
       {loadingInfoTag}
-      <Router history={history}>
-        <Switch>
-          <Route exact={true} path="/login" component={Login} />
-          <Route path="/markor" component={MarkorMain} />
-
-          <Route component={Login} />
-        </Switch>
-      </Router>
+      <Page />
     </div>
   );
 };

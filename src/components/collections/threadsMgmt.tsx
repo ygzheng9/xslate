@@ -7,8 +7,6 @@ import { connect } from "dva";
 import * as _ from "lodash";
 import * as moment from "moment";
 
-import OSS from "ali-oss";
-
 import "./markor.css";
 
 import { IAPIMessage, IAPIThread } from "./types";
@@ -137,14 +135,6 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   constructor(props: any) {
     super(props);
 
-    // 建立 ali-oss 的客户端
-    this.client = new OSS({
-      accessKeyId: "LTAIJuSjXPx3B35m",
-      accessKeySecret: "5nz7Blk9nIr2R11Tss7FOVU5pk5cPJ",
-      region: "oss-cn-shanghai",
-      bucket: "ordercommit"
-    });
-
     // 设置一个属性为空的对象
     const naThread = {} as IAPIThread;
     const fullPath = [] as IAPIThread[];
@@ -192,7 +182,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   };
 
   public render() {
-    const { threads, messages } = this.props;
+    const { threads, messages, client } = this.props;
     const { viewPath } = this.state;
     const currThread = viewPath[viewPath.length - 1];
 
@@ -211,14 +201,18 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
     const messagesProps: IRenderMessagesProps = {
       messages,
       currThread,
-      client: this.client
+      client
     };
+
+    const btnTitle = "数据未加载，点击加载";
 
     return (
       <div>
         <ViewPath {...viewPathProps} />
-        <Button onClick={this.props.loadAllData}>{"刷新"}</Button>
         <div style={{ background: "#fff", padding: 24, minHeight: 600 }}>
+          {threads.length === 0 && (
+            <Button onClick={this.props.loadAllData}>{btnTitle}</Button>
+          )}
           <RenderThread {...threadsProps} />
           <RenderMessages {...messagesProps} />
         </div>
@@ -229,11 +223,12 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
 
 function mapStateToProps(store: any) {
   const { markorApp } = store;
-  const { threads, messages } = markorApp;
+  const { threads, messages, client } = markorApp;
 
   return {
     threads,
-    messages
+    messages,
+    client
   };
 }
 

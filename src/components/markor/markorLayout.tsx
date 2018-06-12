@@ -1,14 +1,12 @@
 import * as React from "react";
 
-import {
-  HashRouter as Router,
-  Link,
-  Route,
-  Switch,
-  withRouter
-} from "react-router-dom";
+import { HashRouter as Router, Link, Route, Switch } from "react-router-dom";
+
+import { connect } from "dva";
 
 import { Layout, Menu } from "antd";
+import { ClickParam } from "antd/lib/menu";
+
 const { Header, Content, Footer } = Layout;
 
 import "./markorLayout.css";
@@ -19,16 +17,28 @@ import ThreadMgmt from "../collections/threadsMgmt";
 // 商品管理
 import ProductsMgmt from "../collections/productsMgmt";
 
-class MarkorLayout extends React.Component<any> {
+// 用户管理
+import UserMgmt from "../collections/userMgmt";
+
+class MarkorLayout extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = { selectedKeys: ["1"] };
+  }
+
+  public clickMenu = (param: ClickParam) => {
+    console.log("clicked: ", param);
+
+    const keys = [param.key];
+    this.setState({
+      selectedKeys: keys
+    });
+  };
+
   public render() {
-    const { match, setLoadingInfo, isLogin } = this.props;
-
-    const threadProps = {
-      setLoadingInfo,
-      isLogin
-    };
-
-    const Threads = () => <ThreadMgmt {...threadProps} />;
+    const { selectedKeys } = this.state;
+    const { user, logout } = this.props;
 
     return (
       <Layout>
@@ -39,30 +49,39 @@ class MarkorLayout extends React.Component<any> {
             <img style={{ width: 100, height: 30 }} src="/pic/MHF.png" />
           </div>
 
+          <div className="markorLogout">
+            {`${user.username}    `}
+            <a onClick={logout}>退出</a>
+          </div>
+
           <Menu
             theme="light"
             mode="horizontal"
-            defaultSelectedKeys={["1"]}
+            onClick={this.clickMenu}
+            selectedKeys={selectedKeys}
             style={{ lineHeight: "64px" }}
           >
             <Menu.Item key="1">
-              <Link to={`${match.url}/threads`}>项目</Link>
+              <Link to={`/threads`}>数据库</Link>
             </Menu.Item>
-            <Menu.Item key="2">数据库</Menu.Item>
+            <Menu.Item key="2">
+              <Link to={`/products`}>商品</Link>
+            </Menu.Item>
             <Menu.Item key="3">
-              <Link to={`${match.url}/products`}>项目</Link>
+              <Link to={`/users`}>用户</Link>
             </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: "0 50px", marginTop: 64 }}>
           <Router>
             <Switch>
-              <Route path={`${match.url}/threads`} component={Threads} />
+              <Route path={`/threads`} component={ThreadMgmt} />
 
-              <Route path={`${match.url}/products`} component={ProductsMgmt} />
+              <Route path={`/products`} component={ProductsMgmt} />
 
-              <Route exact={true} path={match.url} component={ThreadMgmt} />
-              <Route component={Threads} />
+              <Route path={`/users`} component={UserMgmt} />
+
+              <Route component={ThreadMgmt} />
             </Switch>
           </Router>
         </Content>
@@ -74,4 +93,27 @@ class MarkorLayout extends React.Component<any> {
   }
 }
 
-export default withRouter(MarkorLayout);
+function mapStateToProps(store: any) {
+  const { markorApp } = store;
+  const { user } = markorApp;
+
+  return {
+    user
+  };
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return {
+    // 根据 ref 查找变更记录
+    logout: () => {
+      dispatch({
+        type: "markorApp/logout"
+      });
+    }
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MarkorLayout);

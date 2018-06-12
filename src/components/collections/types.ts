@@ -158,6 +158,47 @@ export interface IAPIAttrValue {
   value: string;
 }
 
+// 用户清单
+export interface IAPIUser {
+  updatedAt: string;
+  id: string;
+  createdAt: string;
+  objectId: string;
+  name: string;
+  role: string;
+}
+
+// 在线商品返回的数据，第一层
+export interface IAPIAssortment {
+  createdAt: string;
+  department: string;
+  id: string;
+  itemNumber: string;
+  num: string;
+  name: string;
+  objectId: string;
+  planId: string;
+  productClass: string;
+  productSubclass: string;
+  productes?: IAPIAssortmentProduct[];
+  updatedAt: string;
+}
+
+// 在线商品返回的数据，第二层
+export interface IAPIAssortmentProduct {
+  brand: string;
+  id: string;
+  name: string;
+  price: number;
+  priceUnit: string;
+  product: string;
+  selected: boolean;
+  thumbUrl: string;
+  vproduct: string;
+  productObjectId?: any;
+  vproductObjectId?: any;
+}
+
 // 全局信息
 export interface IMarkorAppStates {
   // 是否正在加载数据

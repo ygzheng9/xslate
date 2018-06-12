@@ -27,8 +27,11 @@ const LoginForm = (props: any) => {
         return;
       }
 
+      const actionType = "markorApp/login";
+      // const actionType = "markorApp/testEffect";
+
       dispatch({
-        type: "markorApp/login",
+        type: actionType,
         payload: values
       });
     });
