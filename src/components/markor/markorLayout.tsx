@@ -12,13 +12,16 @@ const { Header, Content, Footer } = Layout;
 import "./markorLayout.css";
 
 // Threads & Message
-import ThreadMgmt from "../collections/threadsMgmt";
+import ThreadMgmt from "@components//collections/threadsMgmt";
 
 // 商品管理
-import ProductsMgmt from "../collections/productsMgmt";
+import ProductsMgmt from "@components//collections/productsMgmt";
 
 // 用户管理
-import UserMgmt from "../collections/userMgmt";
+import UserMgmt from "@components//collections/userMgmt";
+
+// 订单管理
+import { OrderMgmt } from "@components/orderDelivery";
 
 class MarkorLayout extends React.Component<any, any> {
   constructor(props: any) {
@@ -28,7 +31,7 @@ class MarkorLayout extends React.Component<any, any> {
   }
 
   public clickMenu = (param: ClickParam) => {
-    console.log("clicked: ", param);
+    // console.log("clicked: ", param);
 
     const keys = [param.key];
     this.setState({
@@ -70,6 +73,9 @@ class MarkorLayout extends React.Component<any, any> {
             <Menu.Item key="3">
               <Link to={`/users`}>用户</Link>
             </Menu.Item>
+            <Menu.Item key="4">
+              <Link to={`/orders`}>订单</Link>
+            </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: "0 50px", marginTop: 64 }}>
@@ -80,6 +86,8 @@ class MarkorLayout extends React.Component<any, any> {
               <Route path={`/products`} component={ProductsMgmt} />
 
               <Route path={`/users`} component={UserMgmt} />
+
+              <Route path={`/orders`} component={OrderMgmt} />
 
               <Route component={ThreadMgmt} />
             </Switch>

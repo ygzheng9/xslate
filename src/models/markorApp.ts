@@ -97,10 +97,13 @@ const model: Model = {
       };
       console.log("loginParam: ", loginParam);
 
-      const debug = true;
+      const debug = false;
       if (debug) {
         const token = "C9383C442F5FEAA38483A820A027A5EA11FF73A7";
+        // const token = "C9383C442F5FEAA38483A820A027A5EA11FF7399";
+
         axios.defaults.headers.common.Authorization = token;
+
         yield put({
           type: "updateState",
           payload: {
@@ -294,7 +297,7 @@ const model: Model = {
       // 在线商品
       const assortments = res3.data.content[0].results as IAPIAssortment[];
 
-      console.log(assortments);
+      // console.log(assortments);
 
       yield put({
         type: "updateState",
@@ -314,7 +317,7 @@ const model: Model = {
       const url = `/Markor/adapters/Employee/employees`;
 
       const result = yield axios.get(url);
-      console.log(result);
+      // console.log(result);
 
       if (result.statusText === undefined || result.statusText !== "OK") {
         message.error("网络故障，请稍后重试");
@@ -322,7 +325,7 @@ const model: Model = {
       }
 
       const users = result.data.content as IAPIUser[];
-      console.log("users: ", users);
+      // console.log("users: ", users);
 
       yield put({
         type: "updateState",

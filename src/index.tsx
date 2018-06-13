@@ -11,7 +11,6 @@ import createLoading from "dva-loading";
 import "antd/dist/antd.css";
 import "./index.css";
 
-import count from "./models/count";
 import appData from "./models/markorApp";
 
 // import markorApp from "./routes/Markor";
@@ -51,7 +50,6 @@ const app = dva({
 
 app.use(createLoading());
 
-app.model(count as any);
 app.model(appData as any);
 app.router(start as any);
 app.start("#root");

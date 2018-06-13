@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Input, message, Modal } from "antd";
+import { Breadcrumb, Input, message, Modal } from "antd";
 
 const Search = Input.Search;
 
@@ -313,8 +313,14 @@ class OrderMgmt extends React.Component<{}, IOrderMgmtState> {
 
     return (
       <div>
-        {displayTag}
-        {entryTag}
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item>订单管理</Breadcrumb.Item>
+        </Breadcrumb>
+
+        <div style={{ background: "#fff", padding: 24, minHeight: 600 }}>
+          {displayTag}
+          {entryTag}
+        </div>
       </div>
     );
   }
