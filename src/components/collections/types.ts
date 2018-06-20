@@ -199,6 +199,23 @@ export interface IAPIAssortmentProduct {
   vproductObjectId?: any;
 }
 
+// 操作历史记录
+export interface IAPIOPHistory {
+  objectId: string;
+  // 当前用户
+  name: string;
+  // products 备选商品
+  operateFunction: string;
+  // C R U D
+  operateType: string;
+
+  // 修改的具体内容
+  content: string;
+
+  // unix 到毫秒级的时间戳
+  updateTimeStamp: string;
+}
+
 // 全局信息
 export interface IMarkorAppStates {
   // 是否正在加载数据

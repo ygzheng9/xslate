@@ -2,7 +2,9 @@ import * as React from "react";
 
 import { connect } from "dva";
 
-import { Breadcrumb, Button, Col, Row, Tree } from "antd";
+import { Breadcrumb, Button, Col, Row, Table, Tree } from "antd";
+
+import { ColumnProps } from "antd/lib/table";
 
 import axios from "axios";
 
@@ -10,7 +12,12 @@ import * as _ from "lodash";
 
 import * as moment from "moment";
 
-import { IAPIAssortment, IAPIProduct, IAPIProductGroup } from "./types";
+import {
+  IAPIAssortment,
+  IAPIOPHistory,
+  IAPIProduct,
+  IAPIProductGroup
+} from "./types";
 
 import "./markor.css";
 
@@ -78,6 +85,55 @@ class RemoteImg extends React.Component<any, any> {
   }
 }
 
+interface IShowLogProps {
+  items: IAPIOPHistory[];
+}
+
+const ShowLog = (props: IShowLogProps) => {
+  const { items } = props;
+
+  const list = items
+    .sort((a, b) => (a.updateTimeStamp > b.updateTimeStamp ? 1 : -1))
+    .map((i, idx) => ({ ...i, idx }));
+
+  const columns: Array<ColumnProps<IAPIOPHistory>> = [
+    {
+      title: "#",
+      dataIndex: "idx",
+      key: "idx"
+    },
+    {
+      title: "时间",
+      dataIndex: "updateTimeStamp",
+      key: "updateTimeStamp",
+      render: (text, record) => {
+        // 处理 unix 时间戳
+        const m = moment(text, "x").format("YYYY-MM-DD HH:mm");
+        return m;
+      }
+    },
+    {
+      title: "用户",
+      dataIndex: "name",
+      key: "name"
+    },
+    {
+      title: "操作",
+      dataIndex: "operateType",
+      key: "operateType"
+    }
+  ];
+
+  // tslint:disable-next-line:max-classes-per-file
+  class ItemTable extends Table<IAPIOPHistory> {}
+
+  return (
+    <div>
+      <ItemTable columns={columns} dataSource={list} rowKey="updateTimeStamp" />
+    </div>
+  );
+};
+
 interface IProductsMgmtProps {
   // ali-yun OSS
   client: any;
@@ -91,6 +147,9 @@ interface IProductsMgmtProps {
 
   // 在线库
   assortments: IAPIAssortment[];
+
+  // 修改日志
+  opHistory: IAPIOPHistory[];
 
   //
   loadAllData: () => void;
@@ -314,9 +373,13 @@ class ProductsMgmt extends React.Component<
   };
 
   public render() {
-    const { loadAllData, allGroups } = this.props;
+    const { loadAllData, allGroups, opHistory } = this.props;
 
     const btnTitle = "数据未加载，点击加载";
+
+    const logProps = {
+      items: opHistory
+    };
 
     return (
       <div>
@@ -327,6 +390,8 @@ class ProductsMgmt extends React.Component<
           {allGroups.length === 0 && (
             <Button onClick={loadAllData}> {btnTitle} </Button>
           )}
+
+          <div>{false && <ShowLog {...logProps} />}</div>
 
           <div>
             <Row>
@@ -347,7 +412,8 @@ function mapStateToProps(store: any) {
     allProducts,
     client,
     existClient,
-    assortments
+    assortments,
+    opHistory
   } = markorApp;
 
   return {
@@ -355,7 +421,8 @@ function mapStateToProps(store: any) {
     allProducts,
     client,
     existClient,
-    assortments
+    assortments,
+    opHistory
   };
 }
 

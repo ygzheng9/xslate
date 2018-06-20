@@ -17,6 +17,7 @@ import {
   IAPIAssortment,
   IAPILoginInfo,
   IAPIMessage,
+  IAPIOPHistory,
   IAPIProduct,
   IAPIProductGroup,
   IAPIRtnObject,
@@ -76,7 +77,10 @@ const model: Model = {
     assortments: [] as IAPIAssortment[],
 
     // 用户清单
-    allUsers: [] as IAPIUser[]
+    allUsers: [] as IAPIUser[],
+
+    // 用户操作日志
+    opHistory: [] as IAPIOPHistory[]
   },
 
   reducers: {
@@ -97,9 +101,9 @@ const model: Model = {
       };
       console.log("loginParam: ", loginParam);
 
-      const debug = false;
+      const debug = true;
       if (debug) {
-        const token = "C9383C442F5FEAA38483A820A027A5EA11FF73A7";
+        const token = "6EBE1956DD2F75653F97F246CCA45D7EA8DC2AF4";
         // const token = "C9383C442F5FEAA38483A820A027A5EA11FF7399";
 
         axios.defaults.headers.common.Authorization = token;
@@ -253,6 +257,9 @@ const model: Model = {
       const productsUrl = `/Markor/adapters/Product/products?offset=1&limit=100&timeStamp=0`;
       const assortUrl = `/Markor/adapters/Product/assortments`;
 
+      // 只取备选商品的操作日志
+      const opHistUrl = `/Markor/adapters/Product/logs?offset=1&limit=5000&operateFunction=products`;
+
       yield put({
         type: "updateState",
         payload: {
@@ -263,10 +270,11 @@ const model: Model = {
         }
       });
 
-      const [res1, res2, res3] = yield Promise.all([
+      const [res1, res2, res3, res4] = yield Promise.all([
         axios.get(groupsUrl),
         axios.get(productsUrl),
-        axios.get(assortUrl)
+        axios.get(assortUrl),
+        axios.get(opHistUrl)
       ]);
 
       if (
@@ -275,7 +283,9 @@ const model: Model = {
         res2.statusText === undefined ||
         res2.statusText !== "OK" ||
         res3.statusText === undefined ||
-        res3.statusText !== "OK"
+        res3.statusText !== "OK" ||
+        res4.statusText === undefined ||
+        res4.statusText !== "OK"
       ) {
         message.error("网络故障，请稍后重试");
 
@@ -293,9 +303,15 @@ const model: Model = {
 
       // 备选商品
       const allProducts = res2.data.content[0].results as IAPIProduct[];
+      console.log("allProducts: ", allProducts.map(a => a.objectId));
 
       // 在线商品
       const assortments = res3.data.content[0].results as IAPIAssortment[];
+
+      // 备选商品修改日志
+      const opHistory = res4.data.content[0].results as IAPIOPHistory[];
+      const opHistory2 = opHistory.filter(i => i.operateType !== "R");
+      console.log("log: ", opHistory2.map(a => a.objectId));
 
       // console.log(assortments);
 
@@ -305,7 +321,8 @@ const model: Model = {
           zLoading: false,
           allGroups,
           allProducts,
-          assortments
+          assortments,
+          opHistory: opHistory2
         }
       });
 
