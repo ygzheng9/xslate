@@ -1,6 +1,0 @@
-/* 图片变灰，鼠标等待 */
-
-.notReady {
-  filter: grayscale(1);
-  cursor: wait
-}

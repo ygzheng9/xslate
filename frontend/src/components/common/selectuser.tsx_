@@ -1,0 +1,156 @@
+import * as React from "react";
+
+import { message, Select } from "antd";
+
+import { SelectProps } from "antd/lib/select";
+
+import * as Rx from "rxjs";
+
+import * as usersService from "@services/users";
+
+const Option = Select.Option;
+
+interface ISelectUserProps {
+  disabled: boolean;
+}
+
+type Props = ISelectUserProps & SelectProps;
+
+class SelectUser extends React.Component<Props, any> {
+  constructor(props: ISelectUserProps) {
+    super(props);
+
+    const value = this.props.value || {};
+    this.state = {
+      name: value.name || "",
+
+      // 下拉框的可选项
+      optionsData: [],
+
+      // 全部用户清单
+      allItems: []
+    };
+
+    this.input = new Rx.Subject();
+  }
+
+  public componentDidMount = async () => {
+    // 加载全部用户清单
+    const { data } = await usersService.fetch();
+    if (data.rtnCode !== 0) {
+      message.error("用户清单加载失败");
+      return;
+    }
+
+    this.setState({ allItems: data.items });
+
+    // 注册一个观察函数，用以观察 被观察对象
+    this.inputSubscription = this.input
+      .debounceTime(300)
+      .subscribe(this.fillByValue);
+  };
+
+  public componentWillReceiveProps(nextProps) {
+    // Should be a controlled component.
+    // value 是定死的
+    if ("value" in nextProps) {
+      const value = nextProps.value;
+
+      this.setState({ ...value }, () => {
+        // 被观察对象有变化
+        this.input.next(value.name);
+      });
+    }
+  }
+
+  public componentWillUnmount = () => {
+    if (this.inputSubscription) {
+      this.inputSubscription.unsubscribe();
+    }
+  };
+
+  public fillByValue = value => {
+    // 一个字都不输入，或者只输入一个字符，清空；
+    // 如果是一个汉字，不清空
+    if (
+      !value ||
+      value.length === 0 ||
+      (value.length === 1 && value.charCodeAt(0) < 255)
+    ) {
+      this.setState({ optionsData: [] });
+      return;
+    }
+
+    // 根据 user 的 name, code, email 模糊匹配
+    const items = this.state.allItems.filter(
+      itm =>
+        itm.name.indexOf(value) !== -1 ||
+        itm.code.indexOf(value) !== -1 ||
+        itm.email.indexOf(value) !== -1
+    );
+
+    // List 中每个元素都是一个 object，有两个 key，在 render 中使用，前后保持一致即可
+    const list = [];
+    items.forEach(r => {
+      list.push({
+        value: r.name,
+        text: r.name
+      });
+    });
+
+    this.setState({ optionsData: list });
+  };
+
+  public handleUserChange = val => {
+    if (!("value" in this.props)) {
+      // 如果使用时设置了 value 属性，那么不会执行到这里
+      this.setState({ name: val });
+    }
+
+    // 把变化的信息，通知到 form 的 onChange，然后，
+    // 在 componentWillReceiveProps 中接收，更新 state
+    this.triggerChange({ name: val });
+  };
+
+  public triggerChange = changedValue => {
+    // Should provide an event to pass value to Form.
+    const onChange = this.props.onChange;
+    if (onChange) {
+      // 执行 form 的回调函数，把值传给 form
+      // 只返回必须的信息即可，一个 user object
+      const { name } = changedValue;
+      const selected = this.state.allItems.find(
+        itm => itm.name === name || itm.code === name
+      );
+
+      onChange(Object.assign({}, selected, changedValue));
+    }
+  };
+
+  public render() {
+    const state = this.state;
+    const options = state.optionsData.map(d => (
+      <Option key={d.value} value={d.value}>
+        {d.text}
+      </Option>
+    ));
+
+    return (
+      <Select
+        mode="combobox"
+        value={state.name}
+        placeholder={this.props.placeholder}
+        notFoundContent=""
+        style={this.props.style}
+        defaultActiveFirstOption={false}
+        filterOption={false}
+        onChange={this.handleUserChange}
+        disabled={this.props.disabled}
+      >
+        {options}
+      </Select>
+    );
+  }
+}
+
+export default SelectUser;
