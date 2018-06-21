@@ -3,32 +3,35 @@ import { EffectsCommandMap, Model, SubscriptionAPI } from "dva";
 import {
   IAPIAssortment,
   IAPILoginInfo,
+  IAPIMessage,
   IAPIOPHistory,
   IAPIProduct,
   IAPIProductGroup,
-  IAPIRtnObject,
-  IAPIUser
+  IAPIThread,
+  IAPIUser,
+  ILoginUser
 } from "@components/collections/types";
 
-// import { Action } from "redux";
+export { IAPILoginInfo, ILoginUser };
 
+///////////////////
 // dva 中 action 类型
-interface IZAction {
+interface IDvaAction {
   type: string;
   payload?: any;
 }
 
 // dva 中 dispatch 类型
-type ZDispatch = (action: IZAction) => any;
+type IDvaDispatch = (action: IDvaAction) => any;
 
 // 被 connect 修饰后的组件
 interface IZConnectedComponent {
-  dispatch: ZDispatch;
+  dispatch: IDvaDispatch;
 }
 
 export {
-  IZAction,
-  ZDispatch,
+  IDvaAction,
+  IDvaDispatch,
   IZConnectedComponent,
   EffectsCommandMap,
   Model,
@@ -67,8 +70,8 @@ export interface IMainModel {
 
   // 全部的 Threads, Messages
   // 所有项目清单，项目是自包含的层级关系，objectaId 和 parentthread
-  threads: any[];
-  messages: any[];
+  threads: IAPIThread[];
+  messages: IAPIMessage[];
 
   // ali-oss 客户端
   client: any;
@@ -90,34 +93,4 @@ export interface IMainModel {
 
   // 用户操作日志
   opHistory: IAPIOPHistory[];
-}
-
-///////////////////////////////////////////
-// 后台 API 返回的对象
-export interface IAPIRtnObject {
-  errors: IAPIRtnError[];
-  // 不同的 API 返回的 content 格式不同
-  content: any[];
-}
-
-// 所有 API 返回的错误信息
-export interface IAPIRtnError {
-  statusCode: string;
-  statusMessage: string;
-}
-
-// 登录 API 返回的具体内容
-export interface IAPILoginInfo {
-  token: string;
-  role: any[];
-  roleName: any[];
-  id: string;
-  name: string;
-}
-
-// 用户信息
-export interface ILoginUser {
-  username: string;
-  password: string;
-  id?: number;
 }

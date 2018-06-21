@@ -2,16 +2,14 @@ import * as React from "react";
 
 import { Badge, Divider, Popconfirm, Table } from "antd";
 
-import { ColumnProps } from "antd/lib/table";
+import { IBizEvent, IRefItem, RefItemOp, TypedColumn } from "@components/types";
 
-import { IBizEvent, IRefItem, RefItemFunc } from "@components/types";
-
-import { IMarkorUser } from "@components/collections/types";
+import { ILoginUser } from "@components/collections/types";
 
 type BizEventFunc = (entry: IBizEvent) => void;
 
 export interface IEventListProps {
-  user: IMarkorUser;
+  user: ILoginUser;
 
   items: IBizEvent[];
 
@@ -20,8 +18,8 @@ export interface IEventListProps {
   onCloseEvent: (id: number) => void;
 
   // 显示 todo，附件、评论
-  showTodo: RefItemFunc;
-  showAttach: RefItemFunc;
+  showTodo: RefItemOp;
+  showAttach: RefItemOp;
   onShowFeedback: BizEventFunc;
 }
 
@@ -71,7 +69,7 @@ const EventList: React.SFC<IEventListProps> = props => {
     showAttach(refItem);
   };
 
-  const columns: Array<ColumnProps<IBizEvent>> = [
+  const columns: TypedColumn<IBizEvent> = [
     {
       title: "#",
       dataIndex: "seq_no",

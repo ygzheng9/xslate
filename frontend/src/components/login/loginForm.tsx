@@ -3,6 +3,7 @@ import * as React from "react";
 import { connect } from "dva";
 
 import { Button, Form, Input, message, Row } from "antd";
+import { FormComponentProps } from "antd/lib/form";
 
 import { IGlobalState, MainModel } from "@models/types";
 import "./loginForm.css";
@@ -10,7 +11,9 @@ import "./loginForm.css";
 const FormItem = Form.Item;
 
 // LoginForm 是 connect 到 redux 中，取里面的 app 数据
-const LoginForm = (props: any) => {
+type ILoginFormProps = FormComponentProps & ReturnType<typeof mapStateToProps>;
+
+const LoginForm: React.SFC<ILoginFormProps> = (props: any) => {
   const {
     form: { validateFieldsAndScroll, getFieldDecorator },
     dispatch,
@@ -18,10 +21,10 @@ const LoginForm = (props: any) => {
   } = props;
 
   const handleOk = () => {
-    console.log("clicked.");
+    // console.log("clicked.");
 
     validateFieldsAndScroll((errors: any, values: any) => {
-      console.log("validate.");
+      // console.log("validate.");
 
       if (errors) {
         message.error("登录失败，请重试");
@@ -29,7 +32,6 @@ const LoginForm = (props: any) => {
       }
 
       const actionType = `${MainModel}/login`;
-      // const actionType = "markorApp/testEffect";
 
       dispatch({
         type: actionType,

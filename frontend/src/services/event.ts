@@ -32,7 +32,7 @@ export default {
   remove: (id: number) => {
     // 根据 id 删除
     const cmd = `${BASE_URL}/${id}`;
-    console.log(cmd);
+    // console.log(cmd);
 
     return request(cmd, {
       method: "DELETE"

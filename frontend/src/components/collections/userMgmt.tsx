@@ -4,9 +4,8 @@ import { connect } from "dva";
 
 import { Breadcrumb, Button, Row, Table } from "antd";
 
-import { ColumnProps } from "antd/lib/table";
-
 import { IAPIUser } from "@components/collections/types";
+import { TypedColumn } from "@components/types";
 import { IGlobalState, MainModel } from "@models/types";
 
 interface IUserMgmtProps {
@@ -21,7 +20,7 @@ const UserMgmt = (props: IUserMgmtProps) => {
     loadAllData();
   };
 
-  const columns: Array<ColumnProps<IAPIUser>> = [
+  const columns: TypedColumn<IAPIUser> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -69,9 +68,9 @@ const UserMgmt = (props: IUserMgmtProps) => {
 };
 
 function mapStateToProps(store: IGlobalState) {
-  const markorApp = store[MainModel];
+  const main = store[MainModel];
 
-  const { allUsers } = markorApp;
+  const { allUsers } = main;
 
   return {
     allUsers

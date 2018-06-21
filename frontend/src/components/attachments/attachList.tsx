@@ -2,24 +2,24 @@ import * as React from "react";
 
 import { Divider, Popconfirm, Table } from "antd";
 
-import { ColumnProps } from "antd/lib/table";
+import { ILoginUser } from "@components/collections/types";
+import { IAttchItem, TypedColumn } from "@components/types";
 
-import { IMarkorUser } from "@components/collections/types";
-import { IAttchItem } from "@components/types";
+type AttchItemAction = (entry: IAttchItem) => void;
 
 interface IAttachListProps {
-  user: IMarkorUser;
+  user: ILoginUser;
   list: IAttchItem[];
-  onDownload: (entry: IAttchItem) => void;
-  onDelete: (entry: IAttchItem) => void;
-  onShowFeedback: (entry: IAttchItem) => void;
+  onDownload: AttchItemAction;
+  onDelete: AttchItemAction;
+  onShowFeedback: AttchItemAction;
 }
 const AttachList: React.SFC<IAttachListProps> = props => {
   const { list, onDownload, onDelete, user, onShowFeedback } = props;
 
   const handleShowFeedback = (entry: IAttchItem) => () => onShowFeedback(entry);
 
-  const columns: Array<ColumnProps<IAttchItem>> = [
+  const columns: TypedColumn<IAttchItem> = [
     {
       title: "文件名",
       dataIndex: "file_name",

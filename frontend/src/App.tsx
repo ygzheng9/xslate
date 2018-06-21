@@ -9,7 +9,7 @@ import { Alert, Layout, Menu, message, Spin } from "antd";
 import axios, { AxiosResponse } from "axios";
 
 import appConfig from "@config/app";
-import { IGlobalState, MainModel, ZDispatch } from "@models/types";
+import { IDvaDispatch, IGlobalState, MainModel } from "@models/types";
 
 const { Header, Content, Footer } = Layout;
 
@@ -49,7 +49,7 @@ const App: React.SFC<AppProps> = props => {
         return response;
       }
 
-      // markor api 返回
+      // mobilefirst api 返回
       const { errors } = response.data;
       if (
         errors !== null &&
@@ -86,7 +86,7 @@ const App: React.SFC<AppProps> = props => {
   const topWnds = ["/login", "/changePass"];
   const idx = topWnds.indexOf(pathname);
   if (idx >= 0) {
-    console.log("login page.");
+    // console.log("login page.");
     return <div>{children}</div>;
   }
 
@@ -163,7 +163,7 @@ function mapStateToProps(state: IGlobalState) {
   };
 }
 
-function mapDispatchToProps(dispatch: ZDispatch) {
+function mapDispatchToProps(dispatch: IDvaDispatch) {
   return {
     logout: () => dispatch({ type: "main/logout" })
   };

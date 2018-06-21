@@ -13,9 +13,6 @@ import "./index.css";
 
 import appData from "./models/main";
 
-// import markorApp from "./routes/Markor";
-// import start from "./routes/start";
-
 import appRoute from "./router";
 
 import registerServiceWorker from "./registerServiceWorker";

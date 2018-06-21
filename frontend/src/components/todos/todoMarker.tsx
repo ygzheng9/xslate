@@ -1,12 +1,11 @@
 import * as React from "react";
 
 import { DatePicker, Form, Input, Modal, Select } from "antd";
-import { FormComponentProps } from "antd/lib/form";
 
+import * as _ from "lodash";
 import * as moment from "moment";
 
-import { ITodoItem } from "@components/types";
-import * as _ from "lodash";
+import { FormComponentProps, ITodoItem } from "@components/types";
 
 const FormItem = Form.Item;
 const Option = Select.Option;

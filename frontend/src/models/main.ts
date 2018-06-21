@@ -14,14 +14,13 @@ import {
   IAPIRtnObject,
   IAPIThread,
   IAPIUser,
-  IMarkorUser
+  ILoginUser
 } from "@components/collections/types";
 
 import {
   EffectsCommandMap,
-  ILoginUser,
+  IDvaAction,
   IMainModel,
-  IZAction,
   MainModel,
   Model,
   SubscriptionAPI
@@ -72,22 +71,22 @@ const model: Model = {
   state: mainState,
 
   reducers: {
-    updateState(state, action: IZAction) {
+    updateState(state, action: IDvaAction) {
       return { ...state, ...action.payload };
     }
   },
 
   effects: {
-    *login(action: IZAction, effects: EffectsCommandMap) {
+    *login(action: IDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const loginUrl = "/Markor/adapters/Employee/login";
 
       // 替换成界面输入的用户名和密码
-      const loginParam: IMarkorUser = {
+      const loginParam: ILoginUser = {
         ...action.payload
       };
-      console.log("loginParam: ", loginParam);
+      // console.log("loginParam: ", loginParam);
 
       const debug = true;
       if (debug) {
@@ -164,7 +163,7 @@ const model: Model = {
       }
     },
 
-    *logout(action: IZAction, effects: EffectsCommandMap) {
+    *logout(action: IDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       yield put({
@@ -182,7 +181,7 @@ const model: Model = {
     },
 
     // 加载 threads， messages
-    *loadThreads(action: IZAction, effects: EffectsCommandMap) {
+    *loadThreads(action: IDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
@@ -227,17 +226,17 @@ const model: Model = {
       message.success("数据加载成功");
     },
 
-    *testEffect(action: IZAction, effects: EffectsCommandMap) {
-      console.log("action: ", action);
-      console.log("param: ", effects);
+    *testEffect(action: IDvaAction, effects: EffectsCommandMap) {
+      // console.log("action: ", action);
+      // console.log("param: ", effects);
       const url = "/Markor/adapters/Setting/setting?limit=1000";
 
       yield axios.get(url);
 
-      console.log("done");
+      // console.log("done");
     },
 
-    *loadProducts(action: IZAction, effects: EffectsCommandMap) {
+    *loadProducts(action: IDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const groupsUrl = `/Markor/adapters/Setting/setting?limit=1000`;
@@ -290,7 +289,7 @@ const model: Model = {
 
       // 备选商品
       const allProducts = res2.data.content[0].results as IAPIProduct[];
-      console.log("allProducts: ", allProducts.map(a => a.objectId));
+      // console.log("allProducts: ", allProducts.map(a => a.objectId));
 
       // 在线商品
       const assortments = res3.data.content[0].results as IAPIAssortment[];
@@ -298,7 +297,7 @@ const model: Model = {
       // 备选商品修改日志
       const opHistory = res4.data.content[0].results as IAPIOPHistory[];
       const opHistory2 = opHistory.filter(i => i.operateType !== "R");
-      console.log("log: ", opHistory2.map(a => a.objectId));
+      // console.log("log: ", opHistory2.map(a => a.objectId));
 
       // console.log(assortments);
 
@@ -316,7 +315,7 @@ const model: Model = {
       message.success("数据加载成功");
     },
 
-    *loadAllUsers(action: IZAction, effects: EffectsCommandMap) {
+    *loadAllUsers(action: IDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
       const url = `/Markor/adapters/Employee/employees`;
 
@@ -351,14 +350,14 @@ const model: Model = {
         if (location.pathname === "/threads") {
           // 加载
           // dispatch({ type: "loadThreads" });
-          console.log("to threads...");
+          // console.log("to threads...");
         }
       });
       history.listen((location: any) => {
         if (location.pathname === "/products") {
           // 加载
           // dispatch({ type: "loadProducts" });
-          console.log("to products...");
+          // console.log("to products...");
         }
       });
     }

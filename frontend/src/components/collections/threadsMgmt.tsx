@@ -7,7 +7,7 @@ import { connect } from "dva";
 import * as _ from "lodash";
 import * as moment from "moment";
 
-import "./markor.css";
+import "./collections.css";
 
 import { IGlobalState, MainModel } from "@models/types";
 import { IAPIMessage, IAPIThread } from "./types";

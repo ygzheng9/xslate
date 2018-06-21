@@ -1,14 +1,13 @@
 import * as React from "react";
 
 import { DatePicker, Form, Input, Modal } from "antd";
-import { FormComponentProps } from "antd/lib/form";
 
 import * as _ from "lodash";
 import * as moment from "moment";
 
 // import SearchUser from 'components/common/selectuser';
 
-import { ITodoItem } from "@components/types";
+import { FormComponentProps, ITodoItem } from "@components/types";
 
 const FormItem = Form.Item;
 const { TextArea } = Input;

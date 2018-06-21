@@ -30,7 +30,7 @@ import todoService from "@services/todos";
 
 import { IGlobalState, ILoginUser, MainModel } from "@models/types";
 
-import { ITodoItem, OnInputChange } from "@components/types";
+import { InputOnChange, ITodoItem } from "@components/types";
 
 import { stringSorter } from "@utils/helper";
 
@@ -41,7 +41,7 @@ const ButtonGroup = Button.Group;
 // 顶部的工具栏，搜索用
 interface ITopBarProps {
   paramCond: string;
-  onParamCondChange: OnInputChange;
+  onParamCondChange: InputOnChange;
   onSearch: MouseEventHandler<HTMLElement>;
 }
 const TopBar: React.SFC<ITopBarProps> = props => {
@@ -304,7 +304,7 @@ class TodoPannel extends React.Component<ITodoPannelProps, ITodoPannelStates> {
   };
 
   // 输入条件
-  public onParamCondChange: OnInputChange = e => {
+  public onParamCondChange: InputOnChange = e => {
     const target = e.currentTarget;
 
     this.setState({

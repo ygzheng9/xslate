@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Button, Col, Icon, Input, message, Row, Upload } from "antd";
 
-import { OnInputChange } from "@components/types";
+import { BeforeUploadAction, InputOnChange } from "@components/types";
 
 // 上载附件的小组件
 // 附件列表，是一个单独的页面，所以有一个 Back，回到来的地方
@@ -11,13 +11,13 @@ import { OnInputChange } from "@components/types";
 interface IAttachForm {
   // 文本输入框
   comment: string;
-  onCommentChange: OnInputChange;
+  onCommentChange: InputOnChange;
 
   // 上载 post 对应的服务器地址
   uploadAction: string;
   // 加工处理后的上载数据
   postData: any;
-  beforeUpload: Upload["beforeUpload"];
+  beforeUpload: BeforeUploadAction;
   postUpload: () => void;
 
   // 返回按钮

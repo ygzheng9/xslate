@@ -2,19 +2,13 @@ import * as React from "react";
 
 import { Button, DatePicker, Form, Input, Select } from "antd";
 
-import { FormComponentProps } from "antd/lib/form";
-
-import * as moment from "moment";
-
 import * as _ from "lodash";
-
-// TODO: 通用控件
-// import SearchUser from "components/common/selectuser";
+import * as moment from "moment";
 
 import deptService from "@services/department";
 
-import { IMarkorUser } from "@components/collections/types";
-import { IBizEvent } from "@components/types";
+import { ILoginUser } from "@components/collections/types";
+import { FormComponentProps, IBizEvent } from "@components/types";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -46,7 +40,7 @@ const tailFormItemLayout = {
 
 interface IEventFormProps extends FormComponentProps {
   item: IBizEvent;
-  user: IMarkorUser;
+  user: ILoginUser;
   modalType: string;
   onOk: (a: any) => void;
   onCancel: () => void;

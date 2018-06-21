@@ -9,10 +9,10 @@ import uploadSvc from "@services/uploads";
 import AttachForm from "./attachForm";
 import AttachList from "./attachList";
 
-import { IMarkorUser } from "@components/collections/types";
+import { ILoginUser } from "@components/collections/types";
 import { IFeedbackMgmtProps } from "@components/feedback/feedbackMgmt";
 
-import { IAttchItem, IRefItem, OnInputChange } from "@components/types";
+import { IAttchItem, InputOnChange, IRefItem } from "@components/types";
 
 // 一个对象，比如：一个会议，一个待办等，都可以关联附件；
 // 一个单独的页面，上面是上载按钮，下面是附件列表；
@@ -24,7 +24,7 @@ import { IAttchItem, IRefItem, OnInputChange } from "@components/types";
 interface IAttachMgmtProps {
   goBack: () => void;
   refItem: IRefItem;
-  user: IMarkorUser;
+  user: ILoginUser;
   isPinned?: boolean;
   readOnly?: boolean;
 }
@@ -113,7 +113,7 @@ class AttachMgmt extends React.Component<IAttachMgmtProps, IAttachMgmtStates> {
   };
 
   // 上载附件时输入备注的文本框
-  public onCommentChange: OnInputChange = e => {
+  public onCommentChange: InputOnChange = e => {
     const target = e.currentTarget;
     this.setState({ comment: target.value });
   };

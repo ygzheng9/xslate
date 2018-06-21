@@ -1,15 +1,19 @@
 import * as React from "react";
-import { ChangeEventHandler, MouseEventHandler } from "react";
 
 import { Button, Col, Input, message, Row, Timeline } from "antd";
 
 import * as _ from "lodash";
 
-import { IMarkorUser } from "@components/collections/types";
+import { ILoginUser } from "@components/collections/types";
 
 import feedbackSvc from "@services/feedback";
 
-import { IComment, IRefItem } from "@components/types";
+import {
+  ButtonOnClick,
+  IComment,
+  IRefItem,
+  TextareaOnChange
+} from "@components/types";
 
 const { TextArea } = Input;
 
@@ -20,8 +24,8 @@ const { TextArea } = Input;
 // 没有使用 form，但是是 受控组件
 interface IFeedbackInputProps {
   comment: string;
-  onCommentChange: ChangeEventHandler<HTMLElement>;
-  onCommentSave: MouseEventHandler<HTMLElement>;
+  onCommentChange: TextareaOnChange;
+  onCommentSave: ButtonOnClick;
 }
 const FeedbackInput: React.SFC<IFeedbackInputProps> = props => {
   const { comment, onCommentChange, onCommentSave } = props;
@@ -68,7 +72,7 @@ const CommentItems: React.SFC<ICommentItemsProps> = props => {
 
 // Feedback 管理的组件
 export interface IFeedbackMgmtProps {
-  user: IMarkorUser;
+  user: ILoginUser;
   refItem: IRefItem;
 }
 

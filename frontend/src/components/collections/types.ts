@@ -20,6 +20,12 @@ export interface IAPILoginInfo {
   name: string;
 }
 
+export interface ILoginUser {
+  username: string;
+  password: string;
+  id?: number;
+}
+
 // 项目，自递归的树形结构，objectID - parentthread
 export interface IAPIThread {
   createdAt: string;
@@ -70,24 +76,6 @@ export interface IAPIImage {
   width: number;
   parentEntity: string;
   flag: string;
-}
-
-// 用户信息
-export interface IMarkorUser {
-  username: string;
-  password: string;
-}
-
-// 用户登录信息
-export interface IAppLogin {
-  // 当前用户是否登录
-  isLogin: boolean;
-
-  // 当前用户信息
-  user: IMarkorUser;
-
-  // server 返回的 token
-  token: string;
 }
 
 // 产品库
@@ -214,25 +202,4 @@ export interface IAPIOPHistory {
 
   // unix 到毫秒级的时间戳
   updateTimeStamp: string;
-}
-
-// 全局信息
-export interface IMarkorAppStates {
-  // 是否正在加载数据
-  isLoading: boolean;
-  loadingTip: string;
-  loadingMessage: string;
-  loadingdescription: string;
-
-  // 当前用户是否登录
-  isLogin: boolean;
-
-  // 当前用户信息
-  user: IMarkorUser;
-
-  // server 返回的 token
-  token: string;
-
-  // ali-oss 的客户端
-  client: any;
 }

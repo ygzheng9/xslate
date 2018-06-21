@@ -1,4 +1,4 @@
-# This project is some common functions in Markor project.
+# This project is some common functions in Markor project
 
 ## 数据库
 

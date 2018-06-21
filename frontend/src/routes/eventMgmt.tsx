@@ -13,18 +13,20 @@ import {
   Row,
   Select
 } from "antd";
+
 import { connect } from "dva";
 
 import AttachMgmt from "@components/attachments/attachMgmt";
 import EventForm from "@components/events/eventForm";
 import EventList, { IEventListProps } from "@components/events/eventList";
 import Feedback from "@components/feedback/feedbackMgmt";
+import Todo from "@components/todos/todoMgmt";
 
-import Todo from "@routes/todoMgmt";
 import eventService from "@services/event";
 
-import { IMarkorUser } from "@components/collections/types";
+import { ILoginUser } from "@components/collections/types";
 import { IGlobalState, MainModel } from "@models/types";
+
 import { checkPermission, dateFormat } from "@utils/helper";
 
 import {
@@ -34,7 +36,7 @@ import {
   InputOnChange,
   IRefItem,
   RangeValue,
-  RefItemFunc,
+  RefItemOp,
   SelectOnChange,
   SelectValue
 } from "@components/types";
@@ -55,7 +57,7 @@ interface IEventTopBarProps {
   onSearch: ButtonOnClick;
   onExport: ButtonOnClick;
   onNew: ButtonOnClick;
-  user: IMarkorUser;
+  user: ILoginUser;
 }
 
 const EventTopBar: React.SFC<IEventTopBarProps> = props => {
@@ -319,7 +321,7 @@ class EventMgmt extends React.Component<IEventMgmtProps, IEventMgmtStates> {
   };
 
   // 点击列表中的一行，根据点击的对象，显示TODO
-  public showTodo: RefItemFunc = item => {
+  public showTodo: RefItemOp = item => {
     // 设置 父节点, 显示 todoModal
     this.setState({
       refItem: item,
@@ -335,7 +337,7 @@ class EventMgmt extends React.Component<IEventMgmtProps, IEventMgmtStates> {
   };
 
   // 点击列表中的一行，根据点击的对象，显示 upload
-  public showAttach: RefItemFunc = item => {
+  public showAttach: RefItemOp = item => {
     // 设置引用的主对象
     this.setState({
       refItem: item,

@@ -13,7 +13,7 @@ function checkStatus(response: any) {
     return response;
   }
 
-  console.log(`checkStatus: ${response}`);
+  // console.log(`checkStatus: ${response}`);
   const error: IError = {
     name: "",
     message: response.statusText,

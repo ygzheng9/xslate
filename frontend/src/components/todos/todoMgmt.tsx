@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { connect } from "dva";
-
 import {
   Breadcrumb,
   Button,
@@ -26,15 +24,15 @@ import AttachMgmt from "@components/attachments/attachMgmt";
 import eventService from "@services/event";
 import todoService from "@services/todos";
 
-import { IMarkorUser } from "@components/collections/types";
+import { ILoginUser } from "@components/collections/types";
 import { InputOnChange, IRefItem, ITodoItem } from "@components/types";
-import { IGlobalState, MainModel } from "@models/types";
+
 import { checkPermission } from "@utils/helper";
 
 // 事件列表顶部的 搜索，查找，下载，新增，批量上载
 interface ITodoTopBarProps {
   refItem: IRefItem;
-  user: IMarkorUser;
+  user: ILoginUser;
   paramCond: string;
   onParamCondChange: InputOnChange;
   onSearch: () => void;
@@ -71,7 +69,7 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
     },
     onChange(info: any) {
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
+        // console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
         message.success(`${info.file.name} 上载完毕`);
@@ -125,9 +123,10 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
 // state 其实是当前Todo，是给当前 todo 的子节点使用(feedback, attachments)
 // 如果保留两个 refItem，那么太乱了，所以只保留 props 中，把 state 中去掉，因为：
 //  state 中已经有当前元素 item 了，可以根据 item 计算出所需 refItem
-interface ITodoMgmtProps extends ReturnType<typeof mapStateToProps> {
+interface ITodoMgmtProps {
   refItem: IRefItem;
   goBack: () => void;
+  user: ILoginUser;
 }
 
 interface ITodoMgmtStates {
@@ -340,7 +339,7 @@ class TodoMgmt extends React.Component<ITodoMgmtProps, ITodoMgmtStates> {
 
   public doPublish = async () => {
     const { refItem } = this.props;
-    console.log(refItem);
+    // console.log(refItem);
 
     const result = await eventService.notify(refItem.ref_id);
     if ("err" in result) {
@@ -537,12 +536,4 @@ class TodoMgmt extends React.Component<ITodoMgmtProps, ITodoMgmtStates> {
   }
 }
 
-function mapStateToProps(state: IGlobalState) {
-  const main = state[MainModel];
-
-  return {
-    user: main.user
-  };
-}
-
-export default connect(mapStateToProps)(TodoMgmt);
+export default TodoMgmt;

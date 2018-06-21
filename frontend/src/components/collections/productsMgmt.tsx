@@ -4,12 +4,8 @@ import { connect } from "dva";
 
 import { Breadcrumb, Button, Col, Row, Table, Tree } from "antd";
 
-import { ColumnProps } from "antd/lib/table";
-
 import axios from "axios";
-
 import * as _ from "lodash";
-
 import * as moment from "moment";
 
 import {
@@ -19,9 +15,10 @@ import {
   IAPIProductGroup
 } from "./types";
 
+import { TypedColumn } from "@components/types";
 import { IGlobalState, MainModel } from "@models/types";
 
-import "./markor.css";
+import "./collections.css";
 
 const TreeNode = Tree.TreeNode;
 
@@ -98,7 +95,7 @@ const ShowLog = (props: IShowLogProps) => {
     .sort((a, b) => (a.updateTimeStamp > b.updateTimeStamp ? 1 : -1))
     .map((i, idx) => ({ ...i, idx }));
 
-  const columns: Array<ColumnProps<IAPIOPHistory>> = [
+  const columns: TypedColumn<IAPIOPHistory> = [
     {
       title: "#",
       dataIndex: "idx",
@@ -408,7 +405,7 @@ class ProductsMgmt extends React.Component<
 }
 
 function mapStateToProps(store: IGlobalState) {
-  const markorApp = store[MainModel];
+  const main = store[MainModel];
 
   const {
     allGroups,
@@ -417,7 +414,7 @@ function mapStateToProps(store: IGlobalState) {
     existClient,
     assortments,
     opHistory
-  } = markorApp;
+  } = main;
 
   return {
     allGroups,

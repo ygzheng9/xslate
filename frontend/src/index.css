@@ -1,4 +1,4 @@
-.markorLayoutLogo {
+.layoutLogo {
   width: 160px;
   height: 31px;
   /* background: rgba(255, 255, 255, .2); */
@@ -6,7 +6,7 @@
   float: left;
 }
 
-.markorLogout {
+.logout {
   width: 160px;
   height: 31px;
   /* background: rgba(255, 255, 255, .2); */

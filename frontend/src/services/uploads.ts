@@ -17,7 +17,7 @@ export default {
   // 下载附件
   downloadFile: (id: any) => {
     const urlCmd = `/api/uploads_download/${id}`;
-    console.log(urlCmd);
+    // console.log(urlCmd);
     window.location.href = urlCmd;
   },
 

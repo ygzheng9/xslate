@@ -1,14 +1,13 @@
 import * as React from "react";
 
 import { Button, Divider, Popconfirm, Table, Tooltip } from "antd";
-import { ColumnProps } from "antd/lib/table";
 
 import FontAwesome from "react-fontawesome";
 
 import * as moment from "moment";
 
-import { IMarkorUser } from "@components/collections/types";
-import { ITodoItem } from "@components/types";
+import { ILoginUser } from "@components/collections/types";
+import { ITodoItem, TypedColumn } from "@components/types";
 import "@routes/todo.css";
 import { stringSorter } from "@utils/helper";
 
@@ -16,7 +15,7 @@ const ButtonGroup = Button.Group;
 
 interface ITodoListProps {
   items: ITodoItem[];
-  user: IMarkorUser;
+  user: ILoginUser;
   onEdit: (a: ITodoItem) => void;
   onDelete: (id: number, msg: string) => void;
   showMark: (a: ITodoItem) => void;
@@ -46,7 +45,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
   const onShowFeedbackWrap = (record: ITodoItem) => () =>
     onShowFeedback(record);
 
-  const columns: Array<ColumnProps<ITodoItem>> = [
+  const columns: TypedColumn<ITodoItem> = [
     {
       title: "#",
       dataIndex: "seq",

@@ -1,9 +1,35 @@
-import { DOMAttributes } from "react";
+import { DOMAttributes, TextareaHTMLAttributes } from "react";
 
-import { SelectProps, SelectValue } from "antd/lib/select";
-
+import { Upload } from "antd";
 import { RangePickerProps } from "antd/lib/date-picker/interface";
+import { FormComponentProps } from "antd/lib/form";
+import { SelectProps, SelectValue } from "antd/lib/select";
+import { ColumnProps } from "antd/lib/table";
+
 import { Moment } from "moment";
+
+/////////////////////////////////////////
+// html 的 event handler
+export type InputOnChange = DOMAttributes<HTMLInputElement>["onChange"];
+
+export type TextareaOnChange = TextareaHTMLAttributes<
+  HTMLTextAreaElement
+>["onChange"];
+
+export type ButtonOnClick = DOMAttributes<HTMLButtonElement>["onClick"];
+
+export type SelectOnChange = SelectProps["onChange"];
+export { SelectValue, FormComponentProps };
+
+export type DateRangeOnChange = RangePickerProps["onChange"];
+
+export type BeforeUploadAction = Upload["beforeUpload"];
+
+export type RangeValue = [Moment, Moment];
+
+export type TypedColumn<T> = Array<ColumnProps<T>>;
+
+//////////////////////////////////////////
 
 // feedback, attachment 的父元素
 export interface IRefItem {
@@ -12,6 +38,11 @@ export interface IRefItem {
   ref_title: string;
 }
 
+// 父元素操作，refItem
+export type RefItemOp = (e: IRefItem) => void;
+
+///////////////////
+// 本地 API 返回的数据
 // 一个 attachment 对象
 export interface IAttchItem extends IRefItem {
   id: number;
@@ -72,22 +103,3 @@ export interface IBizEvent {
   // 列表显示的排序号
   seq_no?: number;
 }
-
-// 输入框的 onChange 事件
-// TODO: textarea 不可用
-export type OnInputChange = (e: React.FormEvent<HTMLInputElement>) => void;
-
-// 父元素操作，refItem
-export type RefItemFunc = (e: IRefItem) => void;
-
-// html 的 event handler
-export type ButtonOnClick = DOMAttributes<HTMLButtonElement>["onClick"];
-
-export type SelectOnChange = SelectProps["onChange"];
-export { SelectValue };
-
-export type InputOnChange = DOMAttributes<HTMLInputElement>["onChange"];
-
-export type DateRangeOnChange = RangePickerProps["onChange"];
-
-export type RangeValue = [Moment, Moment];
