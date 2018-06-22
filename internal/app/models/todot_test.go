@@ -6,8 +6,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
-
-	_ "github.com/denisenkom/go-mssqldb"
 )
 
 func Test_ScanAllTodos(t *testing.T) {

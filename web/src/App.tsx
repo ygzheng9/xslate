@@ -143,6 +143,10 @@ const App: React.SFC<AppProps> = props => {
             <Menu.Item key="22">
               <Link to={`/events`}>商品计划</Link>
             </Menu.Item>
+            <Menu.Item key="80">
+              <Link to={`/logs`}>系统日志</Link>
+            </Menu.Item>
+
             <Menu.Item key="90">
               <Link to={`/users`}>用户清单</Link>
             </Menu.Item>

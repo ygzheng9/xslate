@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
-	cors "gopkg.in/gin-contrib/cors.v1"
 
 	"github.com/gin-gonic/gin"
+	cors "gopkg.in/gin-contrib/cors.v1"
 
 	"xslate/internal/app/controllers"
 	"xslate/internal/app/models"
@@ -156,6 +156,8 @@ func main() {
 		department.POST("/", deptCtrl.Insert)
 		department.PUT("/", deptCtrl.Update)
 	}
+
+	router.GET("/api/syslogs", controllers.SyslogGetAll)
 
 	router.Run(appConfig.Port)
 }

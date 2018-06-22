@@ -6,8 +6,8 @@ import Feedback from "@components/feedback/feedbackMgmt";
 
 import uploadSvc from "@services/uploads";
 
-import AttachForm from "./attachForm";
-import AttachList from "./attachList";
+import AttachForm from "@components/attachments/attachForm";
+import AttachList from "@components/attachments/attachList";
 
 import { ILoginUser } from "@components/collections/types";
 import { IFeedbackMgmtProps } from "@components/feedback/feedbackMgmt";

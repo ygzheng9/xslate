@@ -20,7 +20,7 @@ import {
 import {
   EffectsCommandMap,
   IDvaAction,
-  IMainModel,
+  IMainState,
   MainModel,
   Model,
   SubscriptionAPI
@@ -28,7 +28,7 @@ import {
 
 import { client, existClient } from "@configs/alioss";
 
-const mainState: IMainModel = {
+const mainState: IMainState = {
   // 全局的加载信息
   zLoading: false,
   loadingdescription: "",

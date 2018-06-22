@@ -11,7 +11,8 @@ import createLoading from "dva-loading";
 import "antd/dist/antd.css";
 import "./index.css";
 
-import appData from "./models/main";
+import appData from "@models/main";
+import logData from "@models/syslog";
 
 import appRoute from "./router";
 
@@ -49,7 +50,8 @@ const app = dva({
 
 app.use(createLoading());
 
-app.model(appData as any);
+app.model(appData);
+app.model(logData);
 app.router(appRoute as any);
 app.start("#root");
 

@@ -9,8 +9,8 @@ import * as moment from "moment";
 
 import "./collections.css";
 
+import { IAPIMessage, IAPIThread } from "@components/collections/types";
 import { IGlobalState, MainModel } from "@models/types";
-import { IAPIMessage, IAPIThread } from "./types";
 
 // Thread 层级浏览的导航栏
 interface IViewPathProps {

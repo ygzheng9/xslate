@@ -13,7 +13,7 @@ import {
   IAPIOPHistory,
   IAPIProduct,
   IAPIProductGroup
-} from "./types";
+} from "@components/collections/types";
 
 import { TypedColumn } from "@components/types";
 import { IGlobalState, MainModel } from "@models/types";

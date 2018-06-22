@@ -43,6 +43,7 @@ export {
 
 // dva 中每一个 model 的 namespace
 export const MainModel = "main";
+export const LogModel = "syslog";
 
 // redux store
 export interface IGlobalState {
@@ -50,13 +51,15 @@ export interface IGlobalState {
     global: boolean;
     models: {
       [MainModel]: boolean;
+      [LogModel]: boolean;
     };
   };
-  [MainModel]: IMainModel;
+  [MainModel]: IMainState;
+  [LogModel]: ISysState;
 }
 
 // modal
-export interface IMainModel {
+export interface IMainState {
   // 全局的加载信息
   zLoading: boolean;
   loadingdescription: string;
@@ -93,4 +96,17 @@ export interface IMainModel {
 
   // 用户操作日志
   opHistory: IAPIOPHistory[];
+}
+
+export interface ISysLog {
+  id: number;
+  username: string;
+  serverDT: string;
+  remoteIP: string;
+  func: string;
+  param: string;
+}
+
+export interface ISysState {
+  logs: ISysLog[];
 }

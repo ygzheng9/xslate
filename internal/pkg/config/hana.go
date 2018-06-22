@@ -10,7 +10,7 @@ import (
 
 // 连接 HANA 数据库
 func connectHANA() {
-	appConfig, err := LoadConfiguration("../config.json")
+	appConfig, err := LoadConfiguration("../../../configs/config.json")
 	if err != nil {
 		fmt.Printf("config error: %v\n", err)
 		return
