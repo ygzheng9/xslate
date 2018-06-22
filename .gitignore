@@ -20,5 +20,6 @@ yarn-error.log*
 .vscode
 
 # configuration information
-config.json
-/frontend/src/config/alioss.ts
+configs/
+/web/src/config/alioss.ts
+.realize.yaml

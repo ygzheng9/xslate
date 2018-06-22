@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/models"
+	"xslate/internal/app/models"
 )
 
 // EventTodoController todo 相关的操作

@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/services"
+	"xslate/internal/app/services"
 )
 
 const (

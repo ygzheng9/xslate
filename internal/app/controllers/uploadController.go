@@ -10,7 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/models"
+	"xslate/internal/app/models"
 )
 
 // UploadController Feedback 相关的操作

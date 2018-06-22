@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,10 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/config"
-	"xslate/controllers"
-	"xslate/models"
-	"xslate/services"
+	"xslate/internal/app/controllers"
+	"xslate/internal/app/models"
+	"xslate/internal/app/services"
+
+	"xslate/internal/pkg/config"
 )
 
 // 显示程序当前目录
@@ -26,13 +28,29 @@ func printPath() {
 	fmt.Printf("Path: %s\n", exPath)
 }
 
+func prettyPrint(v interface{}) (err error) {
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err == nil {
+		fmt.Println(string(b))
+	}
+	return
+}
+
 // 主程序
 func main() {
 	// 从文件加载配置信息，exe 的相同目录下；
-	appConfig, err := config.LoadConfiguration("./config.json")
+	appConfig, err := config.LoadConfiguration("./configs/config.json")
 	if err != nil {
 		fmt.Printf("LoadConfiguration failed. %+v\n", err)
 		return
+	}
+
+	if appConfig.Release {
+		// 发布模式
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		// router 加载后，打印出现错行，所以打印放到了最上面
+		prettyPrint(appConfig)
 	}
 
 	// 初始化 alioss, 数据库连接，邮件模板路径
@@ -42,11 +60,6 @@ func main() {
 		// 开启定时任务
 		models.StartNoticeSvc()
 		fmt.Println("start notice service.")
-	}
-
-	if appConfig.Release {
-		// 发布模式
-		gin.SetMode(gin.ReleaseMode)
 	}
 
 	// 初始化路由
@@ -62,7 +75,10 @@ func main() {
 	} else {
 		// 开发模式，允许所有
 		router.Use(cors.Default())
-		fmt.Printf("config: %+v\n", appConfig)
+		// fmt.Printf("config: %+v\n", appConfig)
+		// spew.Dump(appConfig)
+		// spew.Printf("appConfig: %+v\n", appConfig)
+
 	}
 
 	// 全部使用 api 访问，所以不需要使用 server-side template

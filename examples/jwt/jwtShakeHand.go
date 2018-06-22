@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"xslate/services"
 
 	"github.com/davecgh/go-spew/spew"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gin-gonic/gin"
+
+	"xslate/internal/app/services"
 )
 
 // abortRequest 终止当前的 request

@@ -6,7 +6,7 @@ import (
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 
-	"xslate/config"
+	"xslate/internal/pkg/config"
 )
 
 func init() {

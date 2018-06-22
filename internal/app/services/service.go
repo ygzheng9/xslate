@@ -1,10 +1,10 @@
 package services
 
 import (
-	"xslate/models"
-
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/jmoiron/sqlx"
+
+	"xslate/internal/app/models"
 )
 
 var ossClient *oss.Client

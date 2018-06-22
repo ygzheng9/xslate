@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/models"
+	"xslate/internal/app/models"
 )
 
 // FeedbackController Feedback 相关的操作

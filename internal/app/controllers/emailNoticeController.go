@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"xslate/models"
+	"xslate/internal/app/models"
 )
 
 // ListEmails 显示邮件列表
