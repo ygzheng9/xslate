@@ -26,7 +26,7 @@ import {
   SubscriptionAPI
 } from "@models/types";
 
-import { client, existClient } from "@config/alioss";
+import { client, existClient } from "@configs/alioss";
 
 const mainState: IMainModel = {
   // 全局的加载信息

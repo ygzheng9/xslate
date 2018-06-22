@@ -21,4 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 
 
-/src/config/alioss.ts
+/src/configs/alioss.ts

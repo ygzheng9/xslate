@@ -7,7 +7,7 @@
       "@routes/*": ["./src/routes/*"],
       "@utils/*": ["./src/utils/*"],
       "@services/*": ["./src/services/*"],
-      "@config/*": ["./src/config/*"]
+      "@configs/*": ["./src/configs/*"]
     },
 
     "outDir": "build/dist",

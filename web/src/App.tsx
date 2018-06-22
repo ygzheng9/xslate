@@ -8,7 +8,7 @@ import { RouteProps } from "react-router";
 import { Alert, Layout, Menu, message, Spin } from "antd";
 import axios, { AxiosResponse } from "axios";
 
-import appConfig from "@config/app";
+import appConfig from "@configs/app";
 import { IDvaDispatch, IGlobalState, MainModel } from "@models/types";
 
 const { Header, Content, Footer } = Layout;

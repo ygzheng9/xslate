@@ -62,5 +62,5 @@ jspm_packages/
 
 # configuration information
 /configs
-/web/src/config/alioss.ts
+/web/src/configs/alioss.ts
 .realize.yaml
