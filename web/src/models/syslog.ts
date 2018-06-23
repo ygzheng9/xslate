@@ -1,6 +1,7 @@
 import {
   EffectsCommandMap,
   IDvaAction,
+  IGlobalState,
   ISysLog,
   ISysState,
   LogModel,
@@ -25,13 +26,13 @@ const model: Model = {
   },
 
   effects: {
-    *loadAllLogs(action: IDvaAction, effects: EffectsCommandMap) {
-      console.log("sysModel loadAllLogs....");
-
+    *loadLogs(action: IDvaAction, effects: EffectsCommandMap) {
       const { put, call } = effects;
+      const { payload } = action;
+      console.log("payload: ", payload);
 
-      const result = yield call(logSvc.query);
-      console.log("result: ", result);
+      const result = yield call(logSvc.queryByParam, payload);
+      // console.log("result: ", result);
 
       yield put({
         type: "updateState",
@@ -39,21 +40,32 @@ const model: Model = {
           logs: result.data.items
         }
       });
+    },
+
+    *reloadLogs(action: IDvaAction, effects: EffectsCommandMap) {
+      const { put, select } = effects;
+      // 取得当前 logs，如果为空，再加载，否则，什么都不做
+      const logs = yield select((state: IGlobalState) => state[LogModel].logs);
+      if (logs.length === 0) {
+        console.log("reload logs....");
+
+        yield put({
+          type: "loadLogs"
+        });
+      }
     }
   },
 
   subscriptions: {
     setup(api: SubscriptionAPI) {
-      const { history, dispatch } = api;
-      // console.log('common model subscriptions:', dispatch, history)
-      // 数据库界面
-      history.listen((location: any) => {
-        if (location.pathname === "/logs") {
-          // 加载
-          dispatch({ type: "loadAllLogs" });
-          // console.log("to threads...");
-        }
-      });
+      // const { history, dispatch } = api;
+      // history.listen((location: any) => {
+      //   if (location.pathname === "/logs") {
+      //     // 如果 logs 已经有数据了，就不需要再从 api 获取；
+      //     // 不能直接取 state，所以采用间接的方式；
+      //     // dispatch({ type: "reloadLogs" });
+      //   }
+      // });
     }
   }
 };

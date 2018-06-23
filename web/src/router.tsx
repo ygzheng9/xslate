@@ -18,7 +18,7 @@ import LoginForm from "@components/login/loginForm";
 import EventMgmt from "@routes/eventMgmt";
 import TodoPannel from "@routes/todoPannel";
 
-import LogMgmt from "@routes/logMgmt";
+import LogItems from "@routes/logMgmt";
 
 export default function({ history }: { history: any }) {
   return (
@@ -39,7 +39,7 @@ export default function({ history }: { history: any }) {
 
           <Route path={`/users`} component={UserMgmt} />
 
-          <Route path={`/logs`} component={LogMgmt} />
+          <Route path={`/logs`} component={LogItems} />
 
           <Route component={ThreadMgmt} />
         </Switch>

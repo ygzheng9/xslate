@@ -158,6 +158,7 @@ func main() {
 	}
 
 	router.GET("/api/syslogs", controllers.SyslogGetAll)
+	router.POST("/api/syslogs", controllers.SyslogFindByParam)
 
 	router.Run(appConfig.Port)
 }

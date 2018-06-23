@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { Divider, Popconfirm, Table } from "antd";
 
+// import * as R from "ramda";
+
 import { ILoginUser } from "@components/collections/types";
 import { IAttchItem, TypedColumn } from "@components/types";
 
@@ -18,6 +20,7 @@ const AttachList: React.SFC<IAttachListProps> = props => {
   const { list, onDownload, onDelete, user, onShowFeedback } = props;
 
   const handleShowFeedback = (entry: IAttchItem) => () => onShowFeedback(entry);
+  // const handleShowFeedback = R.curry(onShowFeedback);
 
   const columns: TypedColumn<IAttchItem> = [
     {

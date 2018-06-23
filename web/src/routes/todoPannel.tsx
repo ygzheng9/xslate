@@ -1,5 +1,4 @@
 import * as React from "react";
-import { MouseEventHandler } from "react";
 
 import { connect } from "dva";
 
@@ -30,7 +29,7 @@ import todoService from "@services/todos";
 
 import { IGlobalState, ILoginUser, MainModel } from "@models/types";
 
-import { InputOnChange, ITodoItem } from "@components/types";
+import { ButtonOnClick, InputOnChange, ITodoItem } from "@components/types";
 
 import { stringSorter } from "@utils/helper";
 
@@ -42,7 +41,7 @@ const ButtonGroup = Button.Group;
 interface ITopBarProps {
   paramCond: string;
   onParamCondChange: InputOnChange;
-  onSearch: MouseEventHandler<HTMLElement>;
+  onSearch: ButtonOnClick;
 }
 const TopBar: React.SFC<ITopBarProps> = props => {
   const { paramCond, onParamCondChange, onSearch } = props;

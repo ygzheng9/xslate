@@ -1,7 +1,9 @@
 import * as fetch from "dva/fetch";
 
 function parseJSON(response: any) {
-  return response.json();
+  const json = response.json();
+  // console.log("res: ", json);
+  return json;
 }
 
 interface IError extends Error {
@@ -9,6 +11,8 @@ interface IError extends Error {
 }
 
 function checkStatus(response: any) {
+  // console.log("checkStatus res: ", response);
+
   if (response.status >= 200 && response.status < 300) {
     return response;
   }

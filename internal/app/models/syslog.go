@@ -47,3 +47,15 @@ func SyslogInsert(d Syslog) error {
 	_, err := db.NamedExec(cmd, d)
 	return err
 }
+
+// SyslogFindByParam 根据条件查找
+func SyslogFindByParam(start, end, cond string) ([]Syslog, error) {
+	// 拼接查询的 sql
+	where := " where (serverDT >= '" + start + "' and serverDT <= '" + end + "' ) "
+
+	if len(cond) > 0 {
+		where = where + " and ( (username like '%" + cond + "%') or (remoteIP like '%" + cond + "%') or (func like '%" + cond + "%') or (param like '%" + cond + "%') )"
+	}
+
+	return SyslogFindBy(where)
+}
