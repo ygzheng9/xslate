@@ -19,11 +19,11 @@ import {
 
 import {
   EffectsCommandMap,
-  IDvaAction,
   IMainState,
   MainModel,
   Model,
-  SubscriptionAPI
+  SubscriptionAPI,
+  ZDvaAction
 } from "@models/types";
 
 import { client, existClient } from "@configs/alioss";
@@ -71,13 +71,13 @@ const model: Model = {
   state: mainState,
 
   reducers: {
-    updateState(state, action: IDvaAction) {
+    updateState(state, action: ZDvaAction) {
       return { ...state, ...action.payload };
     }
   },
 
   effects: {
-    *login(action: IDvaAction, effects: EffectsCommandMap) {
+    *login(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const loginUrl = "/Markor/adapters/Employee/login";
@@ -163,7 +163,7 @@ const model: Model = {
       }
     },
 
-    *logout(action: IDvaAction, effects: EffectsCommandMap) {
+    *logout(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       yield put({
@@ -181,7 +181,7 @@ const model: Model = {
     },
 
     // 加载 threads， messages
-    *loadThreads(action: IDvaAction, effects: EffectsCommandMap) {
+    *loadThreads(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
@@ -226,7 +226,7 @@ const model: Model = {
       message.success("数据加载成功");
     },
 
-    *testEffect(action: IDvaAction, effects: EffectsCommandMap) {
+    *testEffect(action: ZDvaAction, effects: EffectsCommandMap) {
       // console.log("action: ", action);
       // console.log("param: ", effects);
       const url = "/Markor/adapters/Setting/setting?limit=1000";
@@ -236,7 +236,7 @@ const model: Model = {
       // console.log("done");
     },
 
-    *loadProducts(action: IDvaAction, effects: EffectsCommandMap) {
+    *loadProducts(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const groupsUrl = `/Markor/adapters/Setting/setting?limit=1000`;
@@ -315,7 +315,7 @@ const model: Model = {
       message.success("数据加载成功");
     },
 
-    *loadAllUsers(action: IDvaAction, effects: EffectsCommandMap) {
+    *loadAllUsers(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
       const url = `/Markor/adapters/Employee/employees`;
 

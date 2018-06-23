@@ -9,7 +9,7 @@ import { Alert, Layout, Menu, message, Spin } from "antd";
 import axios, { AxiosResponse } from "axios";
 
 import appConfig from "@configs/app";
-import { IDvaDispatch, IGlobalState, MainModel } from "@models/types";
+import { IGlobalState, MainModel, ZDvaDispatch } from "@models/types";
 
 const { Header, Content, Footer } = Layout;
 
@@ -167,7 +167,7 @@ function mapStateToProps(state: IGlobalState) {
   };
 }
 
-function mapDispatchToProps(dispatch: IDvaDispatch) {
+function mapDispatchToProps(dispatch: ZDvaDispatch) {
   return {
     logout: () => dispatch({ type: "main/logout" })
   };

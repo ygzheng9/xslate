@@ -1,27 +1,45 @@
-import { DOMAttributes, TextareaHTMLAttributes } from "react";
+// import { DOMAttributes, TextareaHTMLAttributes } from "react";
+// import { SelectProps } from "antd/lib/select";
+// import { RangePickerProps } from "antd/lib/date-picker/interface";
 
 import { Upload } from "antd";
-import { RangePickerProps } from "antd/lib/date-picker/interface";
+import { RangePickerValue } from "antd/lib/date-picker/interface";
 import { FormComponentProps } from "antd/lib/form";
-import { SelectProps, SelectValue } from "antd/lib/select";
+import { SelectValue } from "antd/lib/select";
 import { ColumnProps } from "antd/lib/table";
 
 import { Moment } from "moment";
 
 /////////////////////////////////////////
 // html 的 event handler
-export type InputOnChange = DOMAttributes<HTMLInputElement>["onChange"];
+// export type InputOnChange = DOMAttributes<HTMLInputElement>["onChange"];
+export type InputOnChange = (event: React.FormEvent<HTMLInputElement>) => void;
 
-export type TextareaOnChange = TextareaHTMLAttributes<
-  HTMLTextAreaElement
->["onChange"];
+// export type TextareaOnChange = TextareaHTMLAttributes<
+//   HTMLTextAreaElement
+// >["onChange"];
 
-export type ButtonOnClick = DOMAttributes<HTMLButtonElement>["onClick"];
+export type TextareaOnChange = (
+  event: React.ChangeEvent<HTMLTextAreaElement>
+) => void;
 
-export type SelectOnChange = SelectProps["onChange"];
+// export type ButtonOnClick = DOMAttributes<HTMLButtonElement>["onClick"];
+export type ButtonOnClick = (
+  event: React.MouseEvent<HTMLButtonElement>
+) => void;
+
+// export type SelectOnChange = SelectProps["onChange"];
+export type SelectOnChange = (
+  value: SelectValue,
+  option: React.ReactElement<any> | Array<React.ReactElement<any>>
+) => void;
 export { SelectValue, FormComponentProps };
 
-export type DateRangeOnChange = RangePickerProps["onChange"];
+// export type DateRangeOnChange = RangePickerProps["onChange"];
+export type DateRangeOnChange = (
+  dates: RangePickerValue,
+  dateStrings: [string, string]
+) => void;
 
 export type BeforeUploadAction = Upload["beforeUpload"];
 

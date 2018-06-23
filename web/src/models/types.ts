@@ -12,27 +12,31 @@ import {
   ILoginUser
 } from "@components/collections/types";
 
+import { RangeValue } from "@components/types";
+
 export { IAPILoginInfo, ILoginUser };
 
 ///////////////////
 // dva 中 action 类型
-interface IDvaAction {
+// tslint:disable-next-line:interface-name
+interface ZDvaAction {
   type: string;
   payload?: any;
 }
 
 // dva 中 dispatch 类型
-type IDvaDispatch = (action: IDvaAction) => any;
+type ZDvaDispatch = (action: ZDvaAction) => any;
 
 // 被 connect 修饰后的组件
-interface IZConnectedComponent {
-  dispatch: IDvaDispatch;
+// tslint:disable-next-line:interface-name
+interface ZConnectedComponent {
+  dispatch: ZDvaDispatch;
 }
 
 export {
-  IDvaAction,
-  IDvaDispatch,
-  IZConnectedComponent,
+  ZDvaAction,
+  ZDvaDispatch,
+  ZConnectedComponent,
   EffectsCommandMap,
   Model,
   SubscriptionAPI
@@ -41,9 +45,16 @@ export {
 ////////////////////////////////////////////////
 // 定义 redux store 结构，目的在 connect 之后，可以通过类型约束，避免 typo
 
+// dva 中的固定方法
+export const UpdateState = "updateState";
+
 // dva 中每一个 model 的 namespace
 export const MainModel = "main";
 export const LogModel = "syslog";
+
+// Model 中的方法名字
+// 不同 model 中的名字可以相同，dispatch 调用时，type: `${modelName}/${methodName}`
+export const LoadData = "loadData";
 
 // redux store
 export interface IGlobalState {
@@ -98,6 +109,7 @@ export interface IMainState {
   opHistory: IAPIOPHistory[];
 }
 
+// 后台 API 返回数据结构
 export interface ISysLog {
   id: number;
   username: string;
@@ -107,6 +119,9 @@ export interface ISysLog {
   param: string;
 }
 
+// model
 export interface ISysState {
   logs: ISysLog[];
+  paramCond: string;
+  paramRange: RangeValue;
 }

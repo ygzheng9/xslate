@@ -1,18 +1,27 @@
 import {
   EffectsCommandMap,
-  IDvaAction,
   IGlobalState,
   ISysLog,
   ISysState,
+  LoadData,
   LogModel,
   Model,
-  SubscriptionAPI
+  SubscriptionAPI,
+  UpdateState,
+  ZDvaAction
 } from "@models/types";
+
+import * as moment from "moment";
 
 import logSvc from "@services/syslog";
 
+const end = moment().add(1, "days");
+const start = moment().add(-2, "months");
+
 const sysState: ISysState = {
-  logs: [] as ISysLog[]
+  logs: [] as ISysLog[],
+  paramCond: "",
+  paramRange: [start, end]
 };
 
 const model: Model = {
@@ -20,37 +29,36 @@ const model: Model = {
   state: sysState,
 
   reducers: {
-    updateState(state: ISysState, action: IDvaAction) {
+    [UpdateState](state: ISysState, action: ZDvaAction) {
       return { ...state, ...action.payload };
     }
   },
 
   effects: {
-    *loadLogs(action: IDvaAction, effects: EffectsCommandMap) {
+    // 对于需要在外部访问的方法，统一采用常量作为方法名
+    *[LoadData](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put, call } = effects;
-      const { payload } = action;
-      console.log("payload: ", payload);
 
-      const result = yield call(logSvc.queryByParam, payload);
-      // console.log("result: ", result);
+      const result = yield call(logSvc.queryByParam, action.payload);
 
       yield put({
-        type: "updateState",
+        type: UpdateState,
         payload: {
           logs: result.data.items
         }
       });
     },
 
-    *reloadLogs(action: IDvaAction, effects: EffectsCommandMap) {
+    // 只在本 model 内部使用，不需要在外部访问
+    *reloadLogs(action: ZDvaAction, effects: EffectsCommandMap) {
       const { put, select } = effects;
       // 取得当前 logs，如果为空，再加载，否则，什么都不做
       const logs = yield select((state: IGlobalState) => state[LogModel].logs);
       if (logs.length === 0) {
-        console.log("reload logs....");
+        // console.log("reload logs....");
 
         yield put({
-          type: "loadLogs"
+          type: LoadData
         });
       }
     }
