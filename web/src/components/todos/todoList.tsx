@@ -1,13 +1,15 @@
 import * as React from "react";
 
-import { Button, Divider, Popconfirm, Table, Tooltip } from "antd";
+import { Button, Divider, Popconfirm, Tooltip } from "antd";
 
 import FontAwesome from "react-fontawesome";
 
 import * as moment from "moment";
 
 import { ILoginUser } from "@components/collections/types";
-import { ITodoItem, TypedColumn } from "@components/types";
+import { ITodoItem } from "@services/apiResults";
+import { TypedColumn, TypedTable } from "@utils/shortcuts";
+
 import "@routes/todo.css";
 import { stringSorter } from "@utils/helper";
 
@@ -180,8 +182,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<ITodoItem> {}
+  const ItemTable = TypedTable<ITodoItem>();
 
   return (
     <div>

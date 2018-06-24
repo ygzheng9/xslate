@@ -1,14 +1,50 @@
+// DVA 和 antd 通用的 类型定义
+
+import { EffectsCommandMap, Model, SubscriptionAPI } from "dva";
+
 // import { DOMAttributes, TextareaHTMLAttributes } from "react";
 // import { SelectProps } from "antd/lib/select";
 // import { RangePickerProps } from "antd/lib/date-picker/interface";
 
-import { Upload } from "antd";
+import { Table, Upload } from "antd";
 import { RangePickerValue } from "antd/lib/date-picker/interface";
 import { FormComponentProps } from "antd/lib/form";
 import { SelectValue } from "antd/lib/select";
 import { ColumnProps } from "antd/lib/table";
 
 import { Moment } from "moment";
+
+///////////////////
+// dva 中 action 类型
+// tslint:disable-next-line:interface-name
+interface ZDvaAction {
+  type: string;
+  payload?: any;
+}
+
+// dva 中 dispatch 类型
+type ZDvaDispatch = (action: ZDvaAction) => any;
+
+// 被 connect 修饰后的组件
+// tslint:disable-next-line:interface-name
+interface ZConnectedComponent {
+  dispatch: ZDvaDispatch;
+}
+
+// 返回 dispatch 中 type 字符串
+function ZActionType(model: string, method: string) {
+  return `${model}/${method}`;
+}
+
+export {
+  EffectsCommandMap,
+  Model,
+  SubscriptionAPI,
+  ZDvaAction,
+  ZDvaDispatch,
+  ZConnectedComponent,
+  ZActionType
+};
 
 /////////////////////////////////////////
 // html 的 event handler
@@ -47,77 +83,31 @@ export type RangeValue = [Moment, Moment];
 
 export type TypedColumn<T> = Array<ColumnProps<T>>;
 
-//////////////////////////////////////////
-
-// feedback, attachment 的父元素
-export interface IRefItem {
-  ref_type: string;
-  ref_id: number;
-  ref_title: string;
+export function TypedTable<T>() {
+  return class extends Table<T> {};
 }
 
-// 父元素操作，refItem
-export type RefItemOp = (e: IRefItem) => void;
+///////////////////////////
+// 获取函数参数的类型
+// 使用到了 conditinal type infer
+type FirstArgument<T> = T extends (arg1: infer U, ...args: any[]) => any
+  ? U
+  : any;
 
-///////////////////
-// 本地 API 返回的数据
-// 一个 attachment 对象
-export interface IAttchItem extends IRefItem {
-  id: number;
-  file_name: string;
-  content: string;
-  file_location: string;
-  create_user: string;
-  create_date: string;
+type SecondArgument<T> = T extends (
+  arg1: any,
+  arg2: infer U,
+  ...args: any[]
+) => any
+  ? U
+  : any;
+
+// ZWrap1 把 (a) => void 转变成 (a) => () => void
+export function ZWrap1<T extends (args: any) => void>(fn: T) {
+  return (arg1: FirstArgument<T>) => () => fn(arg1);
 }
 
-// 一个 feedback
-export interface IComment extends IRefItem {
-  id: number;
-  comment: string;
-  create_user: string;
-  create_date: string;
-}
-
-// 一个 todo item
-export interface ITodoItem extends IRefItem {
-  id: number;
-  seq: number;
-  content: string;
-  owner_id: number;
-  owner_name: string;
-  due_date: string;
-  status: string;
-  actual_cmp_date: string;
-  memo: string;
-  create_user: string;
-  create_date: string;
-  update_user: string;
-  update_date: string;
-  mat_rule: string;
-  mat_code: string;
-  mat_cond: string;
-}
-
-// 一个 event
-export interface IBizEvent {
-  id: number;
-  type: string;
-  department: string;
-  user_id: number;
-  user_name: string;
-  happen_at: string;
-  place: string;
-  subject: string;
-  memo: string;
-  create_user: string;
-  create_date: string;
-  update_user: string;
-  update_date: string;
-  material_desc: string;
-  event_status: string;
-  open_cnt: number;
-
-  // 列表显示的排序号
-  seq_no?: number;
+export function ZWrap2<T extends (...args: any[]) => void>(fn: T) {
+  return (arg1: FirstArgument<T>, arg2: SecondArgument<T>) => () =>
+    fn(arg1, arg2);
 }

@@ -1,26 +1,31 @@
 import * as React from "react";
 
-import { Breadcrumb, Button, Col, DatePicker, Input, Row, Table } from "antd";
+import { Breadcrumb, Button, Col, DatePicker, Input, Row } from "antd";
 
 import { connect } from "dva";
 
+// import * as R from "ramda";
+
 import {
   IGlobalState,
-  ISysLog,
   ISysState,
   LoadData,
   LogModel,
-  UpdateState,
-  ZDvaDispatch
+  UpdateState
 } from "@models/types";
+
+import { ISysLog } from "@services/apiResults";
 
 import {
   ButtonOnClick,
   DateRangeOnChange,
   InputOnChange,
   RangeValue,
-  TypedColumn
-} from "@components/types";
+  TypedColumn,
+  TypedTable,
+  ZActionType,
+  ZDvaDispatch
+} from "@utils/shortcuts";
 
 import { dateFormat } from "@utils/helper";
 
@@ -106,8 +111,7 @@ const LogItems: React.SFC<ILogItemsProps> = props => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<ISysLog> {}
+  const ItemTable = TypedTable<ISysLog>();
 
   return (
     <div>
@@ -146,14 +150,14 @@ function mapDispatchToProps(dispatch: ZDvaDispatch) {
   return {
     loadLogs: (param: ILoadLogs) =>
       dispatch({
-        type: `${LogModel}/${LoadData}`,
+        type: ZActionType(LogModel, LoadData),
         payload: param
       }),
 
     // 通过这种方式，把 component 中 state 全部都保存在 model 中，效果是：路由切换时，数据是保留的
     updateState: (param: StateT) =>
       dispatch({
-        type: `${LogModel}/${UpdateState}`,
+        type: ZActionType(LogModel, UpdateState),
         payload: param
       })
   };

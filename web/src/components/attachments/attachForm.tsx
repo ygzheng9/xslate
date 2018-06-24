@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Button, Col, Icon, Input, message, Row, Upload } from "antd";
 
-import { BeforeUploadAction, InputOnChange } from "@components/types";
+import { BeforeUploadAction, InputOnChange } from "@utils/shortcuts";
 
 // 上载附件的小组件
 // 附件列表，是一个单独的页面，所以有一个 Back，回到来的地方

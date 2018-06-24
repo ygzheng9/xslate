@@ -8,7 +8,8 @@ import * as moment from "moment";
 import deptService from "@services/department";
 
 import { ILoginUser } from "@components/collections/types";
-import { FormComponentProps, IBizEvent } from "@components/types";
+import { IBizEvent } from "@services/apiResults";
+import { FormComponentProps } from "@utils/shortcuts";
 
 const FormItem = Form.Item;
 const Option = Select.Option;

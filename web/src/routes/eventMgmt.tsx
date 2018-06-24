@@ -29,17 +29,16 @@ import { IGlobalState, MainModel } from "@models/types";
 
 import { checkPermission, dateFormat } from "@utils/helper";
 
+import { IBizEvent, IRefItem, RefItemOp } from "@services/apiResults";
+
 import {
   ButtonOnClick,
   DateRangeOnChange,
-  IBizEvent,
   InputOnChange,
-  IRefItem,
   RangeValue,
-  RefItemOp,
   SelectOnChange,
   SelectValue
-} from "@components/types";
+} from "@utils/shortcuts";
 
 const InputGroup = Input.Group;
 const Option = Select.Option;

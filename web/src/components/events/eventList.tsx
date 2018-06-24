@@ -1,8 +1,9 @@
 import * as React from "react";
 
-import { Badge, Divider, Popconfirm, Table } from "antd";
+import { Badge, Divider, Popconfirm } from "antd";
 
-import { IBizEvent, IRefItem, RefItemOp, TypedColumn } from "@components/types";
+import { IBizEvent, IRefItem, RefItemOp } from "@services/apiResults";
+import { TypedColumn, TypedTable, ZWrap1, ZWrap2 } from "@utils/shortcuts";
 
 import { ILoginUser } from "@components/collections/types";
 
@@ -35,21 +36,10 @@ const EventList: React.SFC<IEventListProps> = props => {
     onCloseEvent
   } = props;
 
-  const onCloseEventWrap = (id: number) => () => {
-    onCloseEvent(id);
-  };
-
-  const onUpdateWrap = (data: IBizEvent, readOnly: boolean) => () => {
-    onUpdate(data, readOnly);
-  };
-
-  const onDeleteWrap = (id: number) => () => {
-    onDelete(id);
-  };
-
-  const onShowFeedbackWrap = (record: IBizEvent) => () => {
-    onShowFeedback(record);
-  };
+  const onCloseEventWrap = ZWrap1(onCloseEvent);
+  const onUpdateWrap = ZWrap2(onUpdate);
+  const onDeleteWrap = ZWrap1(onDelete);
+  const onShowFeedbackWrap = ZWrap1(onShowFeedback);
 
   const openTodoWnd = (item: IBizEvent) => () => {
     const refItem: IRefItem = {
@@ -192,8 +182,7 @@ const EventList: React.SFC<IEventListProps> = props => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<IBizEvent> {}
+  const ItemTable = TypedTable<IBizEvent>();
 
   return (
     <div>

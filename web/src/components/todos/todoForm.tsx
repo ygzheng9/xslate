@@ -7,7 +7,8 @@ import * as moment from "moment";
 
 // import SearchUser from 'components/common/selectuser';
 
-import { FormComponentProps, ITodoItem } from "@components/types";
+import { ITodoItem } from "@services/apiResults";
+import { FormComponentProps } from "@utils/shortcuts";
 
 const FormItem = Form.Item;
 const { TextArea } = Input;

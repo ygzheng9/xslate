@@ -12,7 +12,8 @@ import AttachList from "@components/attachments/attachList";
 import { ILoginUser } from "@components/collections/types";
 import { IFeedbackMgmtProps } from "@components/feedback/feedbackMgmt";
 
-import { IAttchItem, InputOnChange, IRefItem } from "@components/types";
+import { IAttchItem, IRefItem } from "@services/apiResults";
+import { InputOnChange } from "@utils/shortcuts";
 
 // 一个对象，比如：一个会议，一个待办等，都可以关联附件；
 // 一个单独的页面，上面是上载按钮，下面是附件列表；

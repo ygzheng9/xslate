@@ -3,9 +3,10 @@ import * as React from "react";
 import { connect } from "dva";
 
 import { Button, Form, Input, message, Row } from "antd";
-import { FormComponentProps } from "antd/lib/form";
 
-import { IGlobalState, MainModel } from "@models/types";
+import { IGlobalState, Login, MainModel } from "@models/types";
+import { FormComponentProps, ZActionType } from "@utils/shortcuts";
+
 import "./loginForm.css";
 
 const FormItem = Form.Item;
@@ -31,10 +32,8 @@ const LoginForm: React.SFC<ILoginFormProps> = (props: any) => {
         return;
       }
 
-      const actionType = `${MainModel}/login`;
-
       dispatch({
-        type: actionType,
+        type: ZActionType(MainModel, Login),
         payload: values
       });
     });

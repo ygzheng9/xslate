@@ -25,7 +25,8 @@ import eventService from "@services/event";
 import todoService from "@services/todos";
 
 import { ILoginUser } from "@components/collections/types";
-import { InputOnChange, IRefItem, ITodoItem } from "@components/types";
+import { IRefItem, ITodoItem } from "@services/apiResults";
+import { InputOnChange } from "@utils/shortcuts";
 
 import { checkPermission } from "@utils/helper";
 

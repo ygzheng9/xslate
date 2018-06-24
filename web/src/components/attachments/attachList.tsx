@@ -1,11 +1,12 @@
 import * as React from "react";
 
-import { Divider, Popconfirm, Table } from "antd";
+import { Divider, Popconfirm } from "antd";
 
 // import * as R from "ramda";
 
 import { ILoginUser } from "@components/collections/types";
-import { IAttchItem, TypedColumn } from "@components/types";
+import { IAttchItem } from "@services/apiResults";
+import { TypedColumn, TypedTable } from "@utils/shortcuts";
 
 type AttchItemAction = (entry: IAttchItem) => void;
 
@@ -64,6 +65,7 @@ const AttachList: React.SFC<IAttachListProps> = props => {
             ""
           );
 
+        // const A = handleShowFeedback;
         return (
           <span>
             <a onClick={handleShowFeedback(entry)}>留言</a>
@@ -76,8 +78,7 @@ const AttachList: React.SFC<IAttachListProps> = props => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<IAttchItem> {}
+  const ItemTable = TypedTable<IAttchItem>();
 
   return (
     <div>

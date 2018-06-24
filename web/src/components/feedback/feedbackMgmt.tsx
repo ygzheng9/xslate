@@ -8,12 +8,9 @@ import { ILoginUser } from "@components/collections/types";
 
 import feedbackSvc from "@services/feedback";
 
-import {
-  ButtonOnClick,
-  IComment,
-  IRefItem,
-  TextareaOnChange
-} from "@components/types";
+import { ButtonOnClick, TextareaOnChange } from "@utils/shortcuts";
+
+import { IComment, IRefItem } from "@services/apiResults";
 
 const { TextArea } = Input;
 

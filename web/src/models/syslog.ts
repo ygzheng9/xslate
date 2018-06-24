@@ -1,15 +1,19 @@
 import {
-  EffectsCommandMap,
   IGlobalState,
-  ISysLog,
   ISysState,
   LoadData,
   LogModel,
+  UpdateState
+} from "@models/types";
+
+import {
+  EffectsCommandMap,
   Model,
   SubscriptionAPI,
-  UpdateState,
   ZDvaAction
-} from "@models/types";
+} from "@utils/shortcuts";
+
+import { ISysLog } from "@services/apiResults";
 
 import * as moment from "moment";
 

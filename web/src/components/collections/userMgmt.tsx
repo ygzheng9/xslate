@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { connect } from "dva";
 
-import { Breadcrumb, Button, Row, Table } from "antd";
+import { Breadcrumb, Button, Row } from "antd";
 
 import { IAPIUser } from "@components/collections/types";
-import { TypedColumn } from "@components/types";
-import { IGlobalState, MainModel } from "@models/types";
+import { IGlobalState, LoadAllUsers, MainModel } from "@models/types";
+import { TypedColumn, TypedTable, ZActionType } from "@utils/shortcuts";
 
 interface IUserMgmtProps {
   loadAllData: () => void;
@@ -43,8 +43,7 @@ const UserMgmt = (props: IUserMgmtProps) => {
 
   const btnTitle = "数据未加载，点击加载";
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<IAPIUser> {}
+  const ItemTable = TypedTable<IAPIUser>();
 
   return (
     <div>
@@ -84,7 +83,7 @@ function mapDispatchToProps(dispatch: any) {
     // 根据 ref 查找变更记录
     loadAllData: () => {
       dispatch({
-        type: `${MainModel}/loadAllUsers`
+        type: ZActionType(MainModel, LoadAllUsers)
       });
     }
   };

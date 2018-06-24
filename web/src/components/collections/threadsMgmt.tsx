@@ -10,7 +10,8 @@ import * as moment from "moment";
 import "./collections.css";
 
 import { IAPIMessage, IAPIThread } from "@components/collections/types";
-import { IGlobalState, MainModel } from "@models/types";
+import { IGlobalState, LoadThreads, MainModel } from "@models/types";
+import { ZActionType } from "@utils/shortcuts";
 
 // Thread 层级浏览的导航栏
 interface IViewPathProps {
@@ -241,7 +242,7 @@ function mapDispatchToProps(dispatch: any) {
     // 根据 ref 查找变更记录
     loadAllData: () => {
       dispatch({
-        type: `${MainModel}/loadThreads`
+        type: ZActionType(MainModel, LoadThreads)
       });
     }
   };

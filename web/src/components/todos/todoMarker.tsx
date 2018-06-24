@@ -5,7 +5,8 @@ import { DatePicker, Form, Input, Modal, Select } from "antd";
 import * as _ from "lodash";
 import * as moment from "moment";
 
-import { FormComponentProps, ITodoItem } from "@components/types";
+import { ITodoItem } from "@services/apiResults";
+import { FormComponentProps } from "@utils/shortcuts";
 
 const FormItem = Form.Item;
 const Option = Select.Option;

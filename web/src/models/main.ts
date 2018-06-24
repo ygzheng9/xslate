@@ -18,13 +18,21 @@ import {
 } from "@components/collections/types";
 
 import {
-  EffectsCommandMap,
   IMainState,
+  LoadAllUsers,
+  LoadProducts,
+  LoadThreads,
+  Login,
+  Logout,
   MainModel,
+  UpdateState
+} from "@models/types";
+import {
+  EffectsCommandMap,
   Model,
   SubscriptionAPI,
   ZDvaAction
-} from "@models/types";
+} from "@utils/shortcuts";
 
 import { client, existClient } from "@configs/alioss";
 
@@ -71,13 +79,13 @@ const model: Model = {
   state: mainState,
 
   reducers: {
-    updateState(state, action: ZDvaAction) {
+    [UpdateState](state, action: ZDvaAction) {
       return { ...state, ...action.payload };
     }
   },
 
   effects: {
-    *login(action: ZDvaAction, effects: EffectsCommandMap) {
+    *[Login](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const loginUrl = "/Markor/adapters/Employee/login";
@@ -163,7 +171,7 @@ const model: Model = {
       }
     },
 
-    *logout(action: ZDvaAction, effects: EffectsCommandMap) {
+    *[Logout](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       yield put({
@@ -181,7 +189,7 @@ const model: Model = {
     },
 
     // 加载 threads， messages
-    *loadThreads(action: ZDvaAction, effects: EffectsCommandMap) {
+    *[LoadThreads](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
@@ -236,7 +244,7 @@ const model: Model = {
       // console.log("done");
     },
 
-    *loadProducts(action: ZDvaAction, effects: EffectsCommandMap) {
+    *[LoadProducts](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
 
       const groupsUrl = `/Markor/adapters/Setting/setting?limit=1000`;
@@ -315,7 +323,7 @@ const model: Model = {
       message.success("数据加载成功");
     },
 
-    *loadAllUsers(action: ZDvaAction, effects: EffectsCommandMap) {
+    *[LoadAllUsers](action: ZDvaAction, effects: EffectsCommandMap) {
       const { put } = effects;
       const url = `/Markor/adapters/Employee/employees`;
 

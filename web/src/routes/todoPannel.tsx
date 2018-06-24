@@ -11,11 +11,8 @@ import {
   message,
   Modal,
   Row,
-  Table,
   Tooltip
 } from "antd";
-
-import { ColumnProps } from "antd/lib/table";
 
 import FontAwesome from "react-fontawesome";
 
@@ -27,9 +24,16 @@ import TodoMark from "@components/todos/todoMarker";
 
 import todoService from "@services/todos";
 
-import { IGlobalState, ILoginUser, MainModel } from "@models/types";
-
-import { ButtonOnClick, InputOnChange, ITodoItem } from "@components/types";
+import { ILoginUser } from "@components/collections/types";
+import { IGlobalState, MainModel } from "@models/types";
+import { ITodoItem } from "@services/apiResults";
+import {
+  ButtonOnClick,
+  InputOnChange,
+  TypedColumn,
+  TypedTable,
+  ZWrap1
+} from "@utils/shortcuts";
 
 import { stringSorter } from "@utils/helper";
 
@@ -79,11 +83,11 @@ const TodoList: React.SFC<ITodoListProps> = props => {
     .add(1, "days")
     .format("YYYY-MM-DD");
 
-  const showMarkWrap = (record: ITodoItem) => () => showMark(record);
-  const findAttachWrap = (record: ITodoItem) => () => findAttach(record);
-  const showFeedbackWrap = (record: ITodoItem) => () => onShowFeedback(record);
+  const showMarkWrap = ZWrap1(showMark);
+  const findAttachWrap = ZWrap1(findAttach);
+  const showFeedbackWrap = ZWrap1(onShowFeedback);
 
-  const columns: Array<ColumnProps<ITodoItem>> = [
+  const columns: TypedColumn<ITodoItem> = [
     {
       title: "#",
       dataIndex: "seq_no",
@@ -204,8 +208,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<ITodoItem> {}
+  const ItemTable = TypedTable<ITodoItem>();
 
   return (
     <div>

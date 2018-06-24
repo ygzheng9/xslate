@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { connect } from "dva";
 
-import { Breadcrumb, Button, Col, Row, Table, Tree } from "antd";
+import { Breadcrumb, Button, Col, Row, Tree } from "antd";
 
 import axios from "axios";
 import * as _ from "lodash";
@@ -15,8 +15,8 @@ import {
   IAPIProductGroup
 } from "@components/collections/types";
 
-import { TypedColumn } from "@components/types";
-import { IGlobalState, MainModel } from "@models/types";
+import { IGlobalState, LoadProducts, MainModel } from "@models/types";
+import { TypedColumn, TypedTable, ZActionType } from "@utils/shortcuts";
 
 import "./collections.css";
 
@@ -123,8 +123,7 @@ const ShowLog = (props: IShowLogProps) => {
     }
   ];
 
-  // tslint:disable-next-line:max-classes-per-file
-  class ItemTable extends Table<IAPIOPHistory> {}
+  const ItemTable = TypedTable<IAPIOPHistory>();
 
   return (
     <div>
@@ -433,7 +432,7 @@ function mapDispatchToProps(dispatch: any) {
     // 根据 ref 查找变更记录
     loadAllData: () => {
       dispatch({
-        type: `${MainModel}/loadProducts`
+        type: ZActionType(MainModel, LoadProducts)
       });
     }
   };
