@@ -4,12 +4,11 @@ import { Button, Col, Input, message, Row, Timeline } from "antd";
 
 import * as _ from "lodash";
 
-import { ILoginUser } from "@components/collections/types";
-
 import feedbackSvc from "@services/feedback";
 
 import { ButtonOnClick, TextareaOnChange } from "@utils/shortcuts";
 
+import { IAPILoginInfo } from "@components/collections/types";
 import { IComment, IRefItem } from "@services/apiResults";
 
 const { TextArea } = Input;
@@ -69,7 +68,7 @@ const CommentItems: React.SFC<ICommentItemsProps> = props => {
 
 // Feedback 管理的组件
 export interface IFeedbackMgmtProps {
-  user: ILoginUser;
+  user: IAPILoginInfo;
   refItem: IRefItem;
 }
 
@@ -130,7 +129,7 @@ class FeedbackMgmt extends React.Component<
 
     // 每一个 feedback 都有父元素，这里是设置父元素
     const newOne = { comment: this.state.comment, ...this.state.refItem };
-    newOne.create_user = this.props.user.username;
+    newOne.create_user = this.props.user.name;
 
     const result = await feedbackSvc.save(newOne);
     if ("err" in result) {

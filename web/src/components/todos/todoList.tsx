@@ -6,10 +6,10 @@ import FontAwesome from "react-fontawesome";
 
 import * as moment from "moment";
 
-import { ILoginUser } from "@components/collections/types";
 import { ITodoItem } from "@services/apiResults";
 import { TypedColumn, TypedTable } from "@utils/shortcuts";
 
+import { IAPILoginInfo } from "@components/collections/types";
 import "@routes/todo.css";
 import { stringSorter } from "@utils/helper";
 
@@ -17,7 +17,7 @@ const ButtonGroup = Button.Group;
 
 interface ITodoListProps {
   items: ITodoItem[];
-  user: ILoginUser;
+  user: IAPILoginInfo;
   onEdit: (a: ITodoItem) => void;
   onDelete: (id: number, msg: string) => void;
   showMark: (a: ITodoItem) => void;
@@ -61,7 +61,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有责任人可以修改状态
         let modifyDom: JSX.Element = <div />;
-        if (user.username === record.owner_name && record.status === "") {
+        if (user.name === record.owner_name && record.status === "") {
           modifyDom = (
             <span>
               <a onClick={showMarkWrap(record)}>
@@ -148,7 +148,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有创建人可以修改，删除
         let modifyDom: JSX.Element = <div />;
-        if (user.username === record.create_user && record.status === "") {
+        if (user.name === record.create_user && record.status === "") {
           modifyDom = (
             <span>
               <Divider type="vertical" />

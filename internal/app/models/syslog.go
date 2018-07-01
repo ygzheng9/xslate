@@ -17,7 +17,7 @@ const (
 
 // SyslogFindBy 根据条件查找
 func SyslogFindBy(cond string) ([]Syslog, error) {
-	sqlCmd := logSelect + cond
+	sqlCmd := logSelect + cond + " order by id desc"
 
 	items := []Syslog{}
 	err := db.Select(&items, sqlCmd)
@@ -28,7 +28,7 @@ func SyslogFindBy(cond string) ([]Syslog, error) {
 // SyslogFindAll 返回清单
 func SyslogFindAll() ([]Syslog, error) {
 	// 查询清单
-	return SyslogFindBy(" order by id ")
+	return SyslogFindBy(" order by id desc")
 }
 
 // SyslogFindByID 按照 id 查询

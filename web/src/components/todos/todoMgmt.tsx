@@ -24,7 +24,7 @@ import AttachMgmt from "@components/attachments/attachMgmt";
 import eventService from "@services/event";
 import todoService from "@services/todos";
 
-import { ILoginUser } from "@components/collections/types";
+import { IAPILoginInfo } from "@components/collections/types";
 import { IRefItem, ITodoItem } from "@services/apiResults";
 import { InputOnChange } from "@utils/shortcuts";
 
@@ -33,7 +33,7 @@ import { checkPermission } from "@utils/helper";
 // 事件列表顶部的 搜索，查找，下载，新增，批量上载
 interface ITodoTopBarProps {
   refItem: IRefItem;
-  user: ILoginUser;
+  user: IAPILoginInfo;
   paramCond: string;
   onParamCondChange: InputOnChange;
   onSearch: () => void;
@@ -57,7 +57,7 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
 
   const beforeUpload = () => true;
 
-  const postData = { ...refItem, user_name: user.username };
+  const postData = { ...refItem, user_name: user.name };
 
   const uploadProps = {
     name: "file",
@@ -127,7 +127,7 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
 interface ITodoMgmtProps {
   refItem: IRefItem;
   goBack: () => void;
-  user: ILoginUser;
+  user: IAPILoginInfo;
 }
 
 interface ITodoMgmtStates {
@@ -289,11 +289,11 @@ class TodoMgmt extends React.Component<ITodoMgmtProps, ITodoMgmtStates> {
     // 只有创建人能修改，修改人只能是创建人
     if (entry.id > 0) {
       // 更新
-      param.update_user = user.username;
-      param.create_user = user.username;
+      param.update_user = user.name;
+      param.create_user = user.name;
     } else {
       // 新增
-      param.create_user = user.username;
+      param.create_user = user.name;
     }
 
     // 设置当前元素的父节点

@@ -13,8 +13,7 @@ import {
   IAPIProductGroup,
   IAPIRtnObject,
   IAPIThread,
-  IAPIUser,
-  ILoginUser
+  IAPIUser
 } from "@components/collections/types";
 
 import {
@@ -35,6 +34,9 @@ import {
 } from "@utils/shortcuts";
 
 import { client, existClient } from "@configs/alioss";
+import { ISysLog } from "@services/apiResults";
+
+import logSvc from "@services/syslog";
 
 const mainState: IMainState = {
   // 全局的加载信息
@@ -45,7 +47,7 @@ const mainState: IMainState = {
 
   // 用户登录信息，注意：点击浏览器的刷新按钮后，需要重新登录
   isLogin: false,
-  user: {} as ILoginUser,
+  user: {} as IAPILoginInfo,
   token: "",
   // 全部的 Threads, Messages
   // 所有项目清单，项目是自包含的层级关系，objectaId 和 parentthread
@@ -86,17 +88,17 @@ const model: Model = {
 
   effects: {
     *[Login](action: ZDvaAction, effects: EffectsCommandMap) {
-      const { put } = effects;
+      const { put, select, call } = effects;
 
       const loginUrl = "/Markor/adapters/Employee/login";
 
       // 替换成界面输入的用户名和密码
-      const loginParam: ILoginUser = {
+      const loginParam = {
         ...action.payload
       };
       // console.log("loginParam: ", loginParam);
 
-      const debug = true;
+      const debug = false;
       if (debug) {
         const token = "55A87E908675905D8E95ACD7B39DC96826B6AF84";
 
@@ -108,7 +110,7 @@ const model: Model = {
             zLoading: false,
 
             isLogin: true,
-            user: loginParam,
+            user: { user: loginParam.username },
             token
           }
         });
@@ -159,7 +161,9 @@ const model: Model = {
             zLoading: false,
 
             isLogin: true,
-            user: loginParam,
+            user: {
+              name: loginParam.username
+            },
             token
           }
         });
@@ -167,12 +171,23 @@ const model: Model = {
         // 跳转页面
         yield put(routerRedux.replace("/"));
 
+        // 写日志
+        const { user }: { user: IAPILoginInfo } = yield select(
+          (state: any) => state.main
+        );
+        const p: Partial<ISysLog> = {
+          username: user.name,
+          func: "login",
+          param: JSON.stringify(loginParam)
+        };
+        yield call(logSvc.log, p);
+
         message.success("登录成功");
       }
     },
 
     *[Logout](action: ZDvaAction, effects: EffectsCommandMap) {
-      const { put } = effects;
+      const { put, select, call } = effects;
 
       yield put({
         type: "updateState",
@@ -186,11 +201,22 @@ const model: Model = {
       });
       // 跳转页面
       yield put(routerRedux.replace("/"));
+
+      // 写日志
+      const { user }: { user: IAPILoginInfo } = yield select(
+        (state: any) => state.main
+      );
+      const p: Partial<ISysLog> = {
+        username: user.name,
+        func: "logout",
+        param: JSON.stringify(user)
+      };
+      yield call(logSvc.log, p);
     },
 
     // 加载 threads， messages
     *[LoadThreads](action: ZDvaAction, effects: EffectsCommandMap) {
-      const { put } = effects;
+      const { put, call, select } = effects;
 
       const threadsUrl = `/Markor/adapters/Message/threads?offset=&limit=&timeStamp=0`;
       const messagesUrl = `/Markor/adapters/Message/messages?offset=&limit=&timeStamp=0`;
@@ -232,6 +258,16 @@ const model: Model = {
       });
 
       message.success("数据加载成功");
+
+      // 写日志
+      const { user }: { user: IAPILoginInfo } = yield select(
+        (state: any) => state.main
+      );
+      const p: Partial<ISysLog> = {
+        username: user.name,
+        func: "加载商品数据库信息"
+      };
+      yield call(logSvc.log, p);
     },
 
     *testEffect(action: ZDvaAction, effects: EffectsCommandMap) {
@@ -245,7 +281,7 @@ const model: Model = {
     },
 
     *[LoadProducts](action: ZDvaAction, effects: EffectsCommandMap) {
-      const { put } = effects;
+      const { put, call, select } = effects;
 
       const groupsUrl = `/Markor/adapters/Setting/setting?limit=1000`;
       const productsUrl = `/Markor/adapters/Product/products?offset=1&limit=100&timeStamp=0`;
@@ -321,10 +357,20 @@ const model: Model = {
       });
 
       message.success("数据加载成功");
+
+      // 写日志
+      const { user }: { user: IAPILoginInfo } = yield select(
+        (state: any) => state.main
+      );
+      const p: Partial<ISysLog> = {
+        username: user.name,
+        func: "加载备选/在线商品信息"
+      };
+      yield call(logSvc.log, p);
     },
 
     *[LoadAllUsers](action: ZDvaAction, effects: EffectsCommandMap) {
-      const { put } = effects;
+      const { put, select, call } = effects;
       const url = `/Markor/adapters/Employee/employees`;
 
       const result = yield axios.get(url);
@@ -346,6 +392,16 @@ const model: Model = {
       });
 
       message.info("用户列表加载完毕");
+
+      // 写日志
+      const { user }: { user: IAPILoginInfo } = yield select(
+        (state: any) => state.main
+      );
+      const p: Partial<ISysLog> = {
+        username: user.name,
+        func: "查看用户列表"
+      };
+      yield call(logSvc.log, p);
     }
   },
 

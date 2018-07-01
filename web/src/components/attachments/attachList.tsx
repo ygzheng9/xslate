@@ -4,14 +4,14 @@ import { Divider, Popconfirm } from "antd";
 
 // import * as R from "ramda";
 
-import { ILoginUser } from "@components/collections/types";
+import { IAPILoginInfo } from "@components/collections/types";
 import { IAttchItem } from "@services/apiResults";
 import { TypedColumn, TypedTable } from "@utils/shortcuts";
 
 type AttchItemAction = (entry: IAttchItem) => void;
 
 interface IAttachListProps {
-  user: ILoginUser;
+  user: IAPILoginInfo;
   list: IAttchItem[];
   onDownload: AttchItemAction;
   onDelete: AttchItemAction;
@@ -49,7 +49,7 @@ const AttachList: React.SFC<IAttachListProps> = props => {
       key: "operation",
       render: (text, entry) => {
         const delTag =
-          entry.create_user === user.username ? (
+          entry.create_user === user.name ? (
             <span>
               <Divider type="vertical" />
               <Popconfirm

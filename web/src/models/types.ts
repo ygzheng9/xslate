@@ -1,12 +1,12 @@
 import {
   IAPIAssortment,
+  IAPILoginInfo,
   IAPIMessage,
   IAPIOPHistory,
   IAPIProduct,
   IAPIProductGroup,
   IAPIThread,
-  IAPIUser,
-  ILoginUser
+  IAPIUser
 } from "@components/collections/types";
 
 import { ISysLog } from "@services/apiResults";
@@ -53,7 +53,7 @@ export interface IMainState {
 
   // 用户登录信息，注意：点击浏览器的刷新按钮后，需要重新登录
   isLogin: boolean;
-  user: ILoginUser;
+  user: IAPILoginInfo;
   token: string;
 
   // 全部的 Threads, Messages

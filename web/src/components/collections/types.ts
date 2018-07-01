@@ -16,15 +16,15 @@ export interface IAPILoginInfo {
   token: string;
   role: any[];
   roleName: any[];
-  id: string;
+  id: number;
   name: string;
 }
 
-export interface ILoginUser {
-  username: string;
-  password: string;
-  id?: number;
-}
+// export interface ILoginUser {
+//   username: string;
+//   password: string;
+//   id?: number;
+// }
 
 // 项目，自递归的树形结构，objectID - parentthread
 export interface IAPIThread {

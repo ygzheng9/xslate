@@ -5,12 +5,12 @@ import { Badge, Divider, Popconfirm } from "antd";
 import { IBizEvent, IRefItem, RefItemOp } from "@services/apiResults";
 import { TypedColumn, TypedTable, ZWrap1, ZWrap2 } from "@utils/shortcuts";
 
-import { ILoginUser } from "@components/collections/types";
+import { IAPILoginInfo } from "@components/collections/types";
 
 type BizEventFunc = (entry: IBizEvent) => void;
 
 export interface IEventListProps {
-  user: ILoginUser;
+  user: IAPILoginInfo;
 
   items: IBizEvent[];
 
@@ -140,8 +140,7 @@ const EventList: React.SFC<IEventListProps> = props => {
 
         // 只有创建者，才允许修改
         const canModify =
-          record.user_name === user.username &&
-          record.event_status !== "CLOSED";
+          record.user_name === user.name && record.event_status !== "CLOSED";
         const modifyTag = canModify ? (
           <span>
             <Divider type="vertical" />

@@ -7,7 +7,7 @@ import * as moment from "moment";
 
 import deptService from "@services/department";
 
-import { ILoginUser } from "@components/collections/types";
+import { IAPILoginInfo } from "@components/collections/types";
 import { IBizEvent } from "@services/apiResults";
 import { FormComponentProps } from "@utils/shortcuts";
 
@@ -41,7 +41,7 @@ const tailFormItemLayout = {
 
 interface IEventFormProps extends FormComponentProps {
   item: IBizEvent;
-  user: ILoginUser;
+  user: IAPILoginInfo;
   modalType: string;
   onOk: (a: any) => void;
   onCancel: () => void;
@@ -118,7 +118,7 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
     //   owner = user.name
     // }
 
-    let owner = user.username;
+    let owner = user.name;
     if ("user_name" in item) {
       owner = item.user_name;
     }

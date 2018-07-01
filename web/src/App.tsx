@@ -127,7 +127,7 @@ const App: React.SFC<AppProps> = props => {
           </div>
 
           <div className="logout">
-            {`${user.username}    `}
+            {`${user.name}    `}
             <a onClick={logout}>退出</a>
           </div>
 

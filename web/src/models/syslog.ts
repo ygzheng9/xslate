@@ -17,6 +17,7 @@ import { ISysLog } from "@services/apiResults";
 
 import * as moment from "moment";
 
+import { IAPILoginInfo } from "@components/collections/types";
 import logSvc from "@services/syslog";
 
 const end = moment().add(1, "days");
@@ -51,6 +52,16 @@ const model: Model = {
           logs: result.data.items
         }
       });
+
+      // 写日志
+      // const { user }: { user: IAPILoginInfo } = yield select(
+      //   (state: any) => state.main
+      // );
+      // const p: Partial<ISysLog> = {
+      //   username: user.name,
+      //   func: "查看日志信息"
+      // };
+      // yield call(logSvc.log, p);
     },
 
     // 只在本 model 内部使用，不需要在外部访问
@@ -65,6 +76,18 @@ const model: Model = {
           type: LoadData
         });
       }
+    },
+
+    *log({ payload }, { select, call }) {
+      // 写日志
+      const { user }: { user: IAPILoginInfo } = yield select(
+        (state: any) => state.main
+      );
+      const p: Partial<ISysLog> = {
+        ...payload,
+        username: user.name
+      };
+      yield call(logSvc.log, p);
     }
   },
 

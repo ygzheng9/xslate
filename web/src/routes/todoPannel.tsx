@@ -24,7 +24,6 @@ import TodoMark from "@components/todos/todoMarker";
 
 import todoService from "@services/todos";
 
-import { ILoginUser } from "@components/collections/types";
 import { IGlobalState, MainModel } from "@models/types";
 import { ITodoItem } from "@services/apiResults";
 import {
@@ -37,6 +36,7 @@ import {
 
 import { stringSorter } from "@utils/helper";
 
+import { IAPILoginInfo } from "@components/collections/types";
 import "./todo.css";
 
 const ButtonGroup = Button.Group;
@@ -71,7 +71,7 @@ const TopBar: React.SFC<ITopBarProps> = props => {
 type ItemFunc = (i: ITodoItem) => void;
 interface ITodoListProps {
   items: ITodoItem[];
-  user: ILoginUser;
+  user: IAPILoginInfo;
   showMark: ItemFunc;
   findAttach: ItemFunc;
   onShowFeedback: ItemFunc;
@@ -105,7 +105,7 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有责任人可以修改状态
         let modifyDom: JSX.Element = <div />;
-        if (user.username === record.owner_name && record.status === "") {
+        if (user.name === record.owner_name && record.status === "") {
           modifyDom = (
             <span>
               <a onClick={showMarkWrap(record)}>
@@ -254,7 +254,7 @@ class TodoPannel extends React.Component<ITodoPannelProps, ITodoPannelStates> {
     const { user } = this.props;
     let initParam = "";
     if ("id" in user && user.id !== undefined && user.id > 0) {
-      initParam = user.username;
+      initParam = user.name;
     }
 
     this.state = {

@@ -24,7 +24,7 @@ import Todo from "@components/todos/todoMgmt";
 
 import eventService from "@services/event";
 
-import { ILoginUser } from "@components/collections/types";
+import { IAPILoginInfo } from "@components/collections/types";
 import { IGlobalState, MainModel } from "@models/types";
 
 import { checkPermission, dateFormat } from "@utils/helper";
@@ -56,7 +56,7 @@ interface IEventTopBarProps {
   onSearch: ButtonOnClick;
   onExport: ButtonOnClick;
   onNew: ButtonOnClick;
-  user: ILoginUser;
+  user: IAPILoginInfo;
 }
 
 const EventTopBar: React.SFC<IEventTopBarProps> = props => {

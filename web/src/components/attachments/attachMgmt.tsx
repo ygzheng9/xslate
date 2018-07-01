@@ -9,9 +9,9 @@ import uploadSvc from "@services/uploads";
 import AttachForm from "@components/attachments/attachForm";
 import AttachList from "@components/attachments/attachList";
 
-import { ILoginUser } from "@components/collections/types";
 import { IFeedbackMgmtProps } from "@components/feedback/feedbackMgmt";
 
+import { IAPILoginInfo } from "@components/collections/types";
 import { IAttchItem, IRefItem } from "@services/apiResults";
 import { InputOnChange } from "@utils/shortcuts";
 
@@ -25,7 +25,7 @@ import { InputOnChange } from "@utils/shortcuts";
 interface IAttachMgmtProps {
   goBack: () => void;
   refItem: IRefItem;
-  user: ILoginUser;
+  user: IAPILoginInfo;
   isPinned?: boolean;
   readOnly?: boolean;
 }
@@ -147,7 +147,7 @@ class AttachMgmt extends React.Component<IAttachMgmtProps, IAttachMgmtStates> {
     postData.ref_id = refItem.ref_id;
     postData.ref_type = refItem.ref_type;
     postData.ref_title = refItem.ref_title;
-    postData.create_user = user.username;
+    postData.create_user = user.name;
 
     this.setState({ postData });
 

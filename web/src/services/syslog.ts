@@ -9,5 +9,7 @@ export default {
 
   query2: () => axios.get(BASE_URL),
 
-  queryByParam: (param: any) => axios.post(BASE_URL, param)
+  queryByParam: (param: any) => axios.post(BASE_URL, param),
+
+  log: (param: any) => axios.post(`${BASE_URL}_log`, param)
 };
