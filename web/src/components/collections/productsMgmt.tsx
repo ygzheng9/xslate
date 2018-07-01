@@ -2,7 +2,16 @@ import * as React from "react";
 
 import { connect } from "dva";
 
-import { Breadcrumb, Button, Col, Row, Tree } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Carousel,
+  Col,
+  message,
+  Modal,
+  Row,
+  Tree
+} from "antd";
 
 import axios from "axios";
 import * as _ from "lodash";
@@ -23,6 +32,7 @@ import "./collections.css";
 const TreeNode = Tree.TreeNode;
 
 // tslint:disable-next-line:max-classes-per-file
+// 每张图片
 class RemoteImg extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
@@ -80,7 +90,7 @@ class RemoteImg extends React.Component<any, any> {
 
     const remoteUrl = existClient.signatureUrl(imgUrl);
 
-    return <img src={remoteUrl} className="preview" />;
+    return <img src={remoteUrl} className="modalPic" />;
   }
 }
 
@@ -153,9 +163,19 @@ interface IProductsMgmtProps {
   loadAllData: () => void;
 }
 
-interface IProductsMgmtStates {
-  selectedKey: string;
-}
+const ProductsMgmtStates = {
+  selectedKey: "",
+
+  // 是否显示备选商品的 modal
+  productModal: false,
+  currProduct: {} as IAPIProduct,
+
+  // 是否显示 assortment 的 modal
+  assortModal: false,
+  currAssort: {} as IAPIAssortment
+};
+
+type IProductsMgmtStates = typeof ProductsMgmtStates;
 
 // tslint:disable-next-line:max-classes-per-file
 class ProductsMgmt extends React.Component<
@@ -167,9 +187,7 @@ class ProductsMgmt extends React.Component<
   constructor(props: any) {
     super(props);
 
-    this.state = {
-      selectedKey: ""
-    };
+    this.state = ProductsMgmtStates;
   }
 
   // 树分三级，是固定的
@@ -245,9 +263,67 @@ class ProductsMgmt extends React.Component<
     });
   };
 
-  public productTag = () => {
-    const { allProducts, client, existClient, assortments } = this.props;
+  // 取得 product 的图片数量
+  public getProductImgCount = (prod: IAPIProduct) => {
+    let imgCount = 0;
+    if (prod.images !== null && prod.images !== undefined) {
+      // 获取不重复的图片
+      const allImgs = prod.images.map(i => i.osspath);
+      const distImgs = _.uniq(allImgs);
+      imgCount = _.size(distImgs);
+    }
+    return imgCount;
+  };
 
+  // 选中一个 prodcut
+  public selectProduct = (prod: IAPIProduct) => () => {
+    const imgCount = this.getProductImgCount(prod);
+
+    // 没有图片；
+    if (imgCount === 0) {
+      message.warning("尚未提供照片");
+      return;
+    }
+
+    // 有图片时，才显示图片；
+    this.setState({
+      productModal: true,
+      currProduct: prod
+    });
+  };
+
+  // 取得 assortment 下的 product 个数
+  public getAssortProductCount = (a: IAPIAssortment) => {
+    let cnt = 0;
+    if (
+      a.productes !== null &&
+      a.productes !== undefined &&
+      a.productes.length !== 0
+    ) {
+      cnt = a.productes.length;
+    }
+    return cnt;
+  };
+
+  // 选中一个 assortment
+  public selectAssortment = (asso: IAPIAssortment) => () => {
+    const prodCount = this.getAssortProductCount(asso);
+
+    // 没有产品；
+    if (prodCount === 0) {
+      message.warning("无商品信息");
+      return;
+    }
+
+    // 有图片时，才显示图片；
+    this.setState({
+      assortModal: true,
+      currAssort: asso
+    });
+  };
+
+  public productTag = () => {
+    const { allProducts, assortments } = this.props;
     const { selectedKey } = this.state;
 
     if (
@@ -273,26 +349,16 @@ class ProductsMgmt extends React.Component<
     );
 
     const tag = products.map(p => {
-      let imgsTag: JSX.Element | JSX.Element[] = <div />;
-
-      if (p.images !== null && p.images !== undefined) {
-        // 获取不重复的图片
-        const allImgs = p.images.map(i => i.osspath);
-        const distImgs = _.uniq(allImgs);
-
-        imgsTag = distImgs.map(i => (
-          <img key={i} className="preview" src={client.signatureUrl(i)} />
-        ));
-      }
+      // 显示图片数量
+      const imgCount = this.getProductImgCount(p);
 
       return (
         <Col span={8} key={p.objectId}>
           <div>
-            <div className="message">
-              <p>{`${p.name}`}</p>
+            <div className="message" onClick={this.selectProduct(p)}>
+              <p>{`${p.name} / ${imgCount}`}</p>
               <p>{`${moment(p.createdAt).toNow()} ${p.detail}`}</p>
             </div>
-            {imgsTag}
           </div>
         </Col>
       );
@@ -306,39 +372,15 @@ class ProductsMgmt extends React.Component<
         a.productSubclass === conds[3]
     );
 
-    // console.log("assorts: ", assorts.length);
-
     const assoTag = assorts.map(a => {
-      // assortment 其下的 商品列表
-      let pTag: JSX.Element[] | null = null;
-
-      if (
-        a.productes !== null &&
-        a.productes !== undefined &&
-        a.productes.length !== 0
-      ) {
-        pTag = a.productes.map(ap => {
-          if (ap.product === undefined || ap.product.length === 0) {
-            return <div key={ap.id} />;
-          }
-
-          const param = { existClient, product: ap.product };
-          return (
-            <div key={ap.id}>
-              {`${ap.name} - ${ap.price}`}
-              <RemoteImg {...param} />
-            </div>
-          );
-        });
-      }
+      const cnt = this.getAssortProductCount(a);
 
       return (
         <Col span={8} key={a.id}>
           <div>
-            <div className="message">
-              <p>{a.name}</p>
+            <div className="message" onClick={this.selectAssortment(a)}>
+              <p>{`${a.name} / ${cnt}`}</p>
             </div>
-            {pTag}
           </div>
         </Col>
       );
@@ -347,6 +389,7 @@ class ProductsMgmt extends React.Component<
     const tagTitle = tag.length > 0 && (
       <div>
         <h3>{"备选"}</h3>
+        <hr />
         {tag}
       </div>
     );
@@ -354,6 +397,7 @@ class ProductsMgmt extends React.Component<
     const assoTagTitle = assoTag.length > 0 && (
       <div>
         <h3>{"在线"}</h3>
+        <hr />
         {assoTag}
       </div>
     );
@@ -370,6 +414,70 @@ class ProductsMgmt extends React.Component<
     );
   };
 
+  // 关闭 product 的 modal 窗口
+  public closeProductModal = () => {
+    this.setState({
+      productModal: false
+    });
+  };
+
+  public closeAssoModal = () => {
+    this.setState({
+      assortModal: false
+    });
+  };
+
+  // 根据当前选中的 product，取出其下的 imgs
+  public getCurrProductImgs = () => {
+    const p = this.state.currProduct;
+    const { client } = this.props;
+
+    if (p.images !== null && p.images !== undefined) {
+      // 获取不重复的图片
+      const allImgs = p.images.map(i => i.osspath);
+      const distImgs = _.uniq(allImgs);
+
+      const tag = distImgs.map(i => (
+        <div key={i}>
+          <img key={i} className="modalPic" src={client.signatureUrl(i)} />
+        </div>
+      ));
+
+      return tag;
+    }
+
+    return "";
+  };
+
+  public getCurrAssoImgs = () => {
+    const a = this.state.currAssort;
+    const { existClient } = this.props;
+
+    if (
+      a.productes !== null &&
+      a.productes !== undefined &&
+      a.productes.length !== 0
+    ) {
+      const pTag = a.productes.map(ap => {
+        if (ap.product === undefined || ap.product.length === 0) {
+          return <div key={ap.id} />;
+        }
+
+        const param = { existClient, product: ap.product };
+        return (
+          <div key={ap.id}>
+            {`${ap.name} - ${ap.price}`}
+            <RemoteImg {...param} />
+          </div>
+        );
+      });
+
+      return pTag;
+    }
+
+    return "";
+  };
+
   public render() {
     const { loadAllData, allGroups, opHistory } = this.props;
 
@@ -378,6 +486,28 @@ class ProductsMgmt extends React.Component<
     const logProps = {
       items: opHistory
     };
+
+    const modal1 = (
+      <Modal
+        title="备选商品"
+        visible={this.state.productModal}
+        onCancel={this.closeProductModal}
+        footer={null}
+      >
+        <Carousel>{this.getCurrProductImgs()}</Carousel>
+      </Modal>
+    );
+
+    const modal2 = (
+      <Modal
+        title="在线商品"
+        visible={this.state.assortModal}
+        onCancel={this.closeAssoModal}
+        footer={null}
+      >
+        <Carousel>{this.getCurrAssoImgs()}</Carousel>
+      </Modal>
+    );
 
     return (
       <div>
@@ -395,6 +525,8 @@ class ProductsMgmt extends React.Component<
             <Row>
               <Col span={6}>{this.getFixedTree()}</Col>
               <Col>{this.productTag()}</Col>
+              {this.state.productModal && modal1}
+              {this.state.assortModal && modal2}
             </Row>
           </div>
         </div>

@@ -351,21 +351,14 @@ const model: Model = {
 
   subscriptions: {
     setup(api: SubscriptionAPI) {
-      const { history } = api;
+      const { history, dispatch } = api;
       // console.log('common model subscriptions:', dispatch, history)
       // 数据库界面
       history.listen((location: any) => {
-        if (location.pathname === "/threads") {
-          // 加载
-          // dispatch({ type: "loadThreads" });
-          // console.log("to threads...");
-        }
-      });
-      history.listen((location: any) => {
-        if (location.pathname === "/products") {
-          // 加载
-          // dispatch({ type: "loadProducts" });
-          // console.log("to products...");
+        if (location.pathname === "/users") {
+          dispatch({
+            type: LoadAllUsers
+          });
         }
       });
     }

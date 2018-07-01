@@ -1,6 +1,10 @@
-.preview {
-  width: 300px;
-  height: 200px;
+.modalPic {
+  width: 500px;
+  height: 400px;
+}
+
+.ant-carousel .slick-slide {
+  overflow: hidden;
 }
 
 /* http://play.csssecrets.io/ */

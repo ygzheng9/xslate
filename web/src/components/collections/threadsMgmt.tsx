@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Breadcrumb, Button, Col, Row } from "antd";
+import { Breadcrumb, Button, Carousel, Col, message, Modal, Row } from "antd";
 
 import { connect } from "dva";
 
@@ -18,8 +18,9 @@ interface IViewPathProps {
   paths: IAPIThread[];
   clickNavItem: (t: IAPIThread) => () => void;
 }
+const ViewPath: React.SFC<IViewPathProps> = props => {
+  const { paths, clickNavItem } = props;
 
-const ViewPath = ({ paths, clickNavItem }: IViewPathProps) => {
   const itemTag = paths.map(p => {
     if (_.isEmpty(p)) {
       return (
@@ -48,12 +49,9 @@ interface IRenderThreadProps {
   // 点击 thread 时触发
   selectThread: (thread: IAPIThread) => () => void;
 }
+const RenderThread: React.SFC<IRenderThreadProps> = props => {
+  const { threads, currThread, selectThread } = props;
 
-const RenderThread = ({
-  threads,
-  currThread,
-  selectThread
-}: IRenderThreadProps) => {
   // 由于 Threads 是自递归的树形关系，这里只显示一级；
   let avlThreads: IAPIThread[];
   if (_.isEmpty(currThread)) {
@@ -84,39 +82,24 @@ const RenderThread = ({
 interface IRenderMessagesProps {
   messages: IAPIMessage[];
   currThread: IAPIThread;
-  client: any;
+  getMessageImgCount: (m: IAPIMessage) => number;
+  selectMessage: (m: IAPIMessage) => () => void;
 }
-
-const RenderMessages = ({
-  messages,
-  currThread,
-  client
-}: IRenderMessagesProps) => {
+const RenderMessages: React.SFC<IRenderMessagesProps> = props => {
+  const { messages, currThread, getMessageImgCount, selectMessage } = props;
   // 显示当前 thread 下的 messages
   const avlMessages = messages.filter(m => m.thread === currThread.id);
+
   const renderMessages = (m: IAPIMessage) => {
-    let imgsTag: JSX.Element | JSX.Element[] = <div />;
-
-    if (m.images !== undefined) {
-      // 获取不重复的图片
-      const allImgs = m.images.map(i => i.osspath);
-      const distImgs = _.uniq(allImgs);
-
-      imgsTag = distImgs.map(i => (
-        <img key={i} className="preview" src={client.signatureUrl(i)} />
-      ));
-    }
+    const imgCount = getMessageImgCount(m);
 
     return (
       <Col span={6} key={m.objectId}>
-        <div>
-          <div className="message">
-            <p>{`${m.text}`}</p>
-            <p>{`${moment(m.created).toNow()} ${
-              m.location ? m.location : ""
-            }`}</p>
-          </div>
-          {imgsTag}
+        <div className="message" onClick={selectMessage(m)}>
+          <p>{`${m.text} / ${imgCount}`}</p>
+          <p>{`${moment(m.created).toNow()} ${
+            m.location ? m.location : ""
+          }`}</p>
         </div>
       </Col>
     );
@@ -125,11 +108,25 @@ const RenderMessages = ({
   return <Row>{messagesTag}</Row>;
 };
 
-// 浏览 Thread，以及其下的子目录，具体的 Messages
-interface IThreadsMgmtStates {
+// 浏览 Thread，以及其下的子目录，具体的 Messages\
+const getEmptyList = () => {
+  // 设置一个属性为空的对象
+  const naThread = {} as IAPIThread;
+  const fullPath = [] as IAPIThread[];
+  fullPath.push(naThread);
+  return fullPath;
+};
+
+const threadsMgmtStates = {
   // 浏览的目录，最后一个是当前选中的 Thread
-  viewPath: IAPIThread[];
-}
+  viewPath: getEmptyList(),
+
+  // pic modal
+  picModal: false,
+  currMessage: {} as IAPIMessage
+};
+
+type IThreadsMgmtStates = typeof threadsMgmtStates;
 
 class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   public client: any;
@@ -137,14 +134,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
   constructor(props: any) {
     super(props);
 
-    // 设置一个属性为空的对象
-    const naThread = {} as IAPIThread;
-    const fullPath = [] as IAPIThread[];
-    fullPath.push(naThread);
-
-    this.state = {
-      viewPath: fullPath
-    };
+    this.state = threadsMgmtStates;
   }
 
   // 选中一个 Thread 后，进入下一级
@@ -160,9 +150,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
 
   // 清除当前选中的项目
   public clearCurrThread = () => {
-    const naThread = {} as IAPIThread;
-    const fullPath = [] as IAPIThread[];
-    fullPath.push(naThread);
+    const fullPath = getEmptyList();
 
     this.setState({
       viewPath: fullPath
@@ -183,8 +171,61 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
     });
   };
 
+  // 关闭 message 的 pic modal
+  public closeMessagePic = () => {
+    this.setState({
+      picModal: false
+    });
+  };
+
+  public selectMessage = (m: IAPIMessage) => () => {
+    const picCnt = this.getMessageImgCount(m);
+    if (picCnt === 0) {
+      message.warning("未提供照片");
+      return;
+    }
+
+    this.setState({
+      picModal: true,
+      currMessage: m
+    });
+  };
+
+  // 取得 Message 的图片数量
+  public getMessageImgCount = (m: IAPIMessage) => {
+    let imgCount = 0;
+    if (m.images !== undefined) {
+      // 获取不重复的图片
+      const allImgs = m.images.map(i => i.osspath);
+      const distImgs = _.uniq(allImgs);
+
+      imgCount = _.size(distImgs);
+    }
+    return imgCount;
+  };
+
+  // 获取当前 message 的 img tag
+  public getMessageImgs = () => {
+    const m = this.state.currMessage;
+    const { client } = this.props;
+
+    if (m.images !== undefined) {
+      // 获取不重复的图片
+      const allImgs = m.images.map(i => i.osspath);
+      const distImgs = _.uniq(allImgs);
+
+      const imgsTag = distImgs.map(i => (
+        <div>
+          <img key={i} className="modalPic" src={client.signatureUrl(i)} />
+        </div>
+      ));
+      return imgsTag;
+    }
+    return "";
+  };
+
   public render() {
-    const { threads, messages, client } = this.props;
+    const { threads, messages } = this.props;
     const { viewPath } = this.state;
     const currThread = viewPath[viewPath.length - 1];
 
@@ -203,10 +244,22 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
     const messagesProps: IRenderMessagesProps = {
       messages,
       currThread,
-      client
+      getMessageImgCount: this.getMessageImgCount,
+      selectMessage: this.selectMessage
     };
 
     const btnTitle = "数据未加载，点击加载";
+
+    const modal1 = (
+      <Modal
+        title="数据库"
+        visible={this.state.picModal}
+        onCancel={this.closeMessagePic}
+        footer={null}
+      >
+        <Carousel>{this.getMessageImgs()}</Carousel>
+      </Modal>
+    );
 
     return (
       <div>
@@ -217,6 +270,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
           )}
           <RenderThread {...threadsProps} />
           <RenderMessages {...messagesProps} />
+          {this.state.picModal && modal1}
         </div>
       </div>
     );

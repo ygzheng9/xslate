@@ -1,0 +1,1 @@
+cmd/globalNotes/main.go

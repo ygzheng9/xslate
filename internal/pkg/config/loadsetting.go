@@ -29,11 +29,6 @@ type AppConfig struct {
 		Bucket    string `json:"bucket"`
 		IsAvl     bool   `json:"available"`
 	} `json:"alioss"`
-	Hana struct {
-		Host     string `json:"host"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-	} `json:"hana"`
 }
 
 const (
