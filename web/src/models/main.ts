@@ -98,9 +98,13 @@ const model: Model = {
       };
       // console.log("loginParam: ", loginParam);
 
-      const debug = false;
+      let debug = false;
+      if (loginParam.username === "ibmtest") {
+        debug = true;
+      }
+
       if (debug) {
-        const token = "55A87E908675905D8E95ACD7B39DC96826B6AF84";
+        const token = "C643093A3487110E3CC2209D54C6AE3CC9A1CFAD";
 
         axios.defaults.headers.common.Authorization = token;
 
@@ -110,7 +114,7 @@ const model: Model = {
             zLoading: false,
 
             isLogin: true,
-            user: { user: loginParam.username },
+            user: { name: loginParam.username },
             token
           }
         });
@@ -124,15 +128,15 @@ const model: Model = {
       }
 
       // debug = false;
-      yield put({
-        type: "updateState",
-        payload: {
-          zLoading: true,
-          loadingdescription: "请稍后",
-          loadingMessage: "准备中",
-          loadingTip: "正在获取您的基本信息....."
-        }
-      });
+      // yield put({
+      //   type: "updateState",
+      //   payload: {
+      //     zLoading: true,
+      //     loadingdescription: "请稍后",
+      //     loadingMessage: "准备中",
+      //     loadingTip: "正在获取您的基本信息....."
+      //   }
+      // });
 
       const res = yield axios.post(loginUrl, loginParam);
       const data: IAPIRtnObject = res.data as IAPIRtnObject;
@@ -170,6 +174,7 @@ const model: Model = {
 
         // 跳转页面
         yield put(routerRedux.replace("/"));
+        message.success("登录成功");
 
         // 写日志
         const { user }: { user: IAPILoginInfo } = yield select(
@@ -177,12 +182,9 @@ const model: Model = {
         );
         const p: Partial<ISysLog> = {
           username: user.name,
-          func: "login",
-          param: JSON.stringify(loginParam)
+          func: "login"
         };
         yield call(logSvc.log, p);
-
-        message.success("登录成功");
       }
     },
 

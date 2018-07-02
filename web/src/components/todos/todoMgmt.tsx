@@ -11,6 +11,8 @@ import {
   Upload
 } from "antd";
 
+import { CSVLink } from "react-csv";
+
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
@@ -21,7 +23,7 @@ import TodoMark from "@components/todos/todoMarker";
 
 import AttachMgmt from "@components/attachments/attachMgmt";
 
-import eventService from "@services/event";
+// import eventService from "@services/event";
 import todoService from "@services/todos";
 
 import { IAPILoginInfo } from "@components/collections/types";
@@ -41,6 +43,7 @@ interface ITodoTopBarProps {
   onNew: () => void;
   goBack: () => void;
   doPublish: () => void;
+  filteredItems: ITodoItem[];
 }
 const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
   const {
@@ -49,10 +52,10 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
     paramCond,
     onParamCondChange,
     onSearch,
-    onExport,
     onNew,
     goBack,
-    doPublish
+    doPublish,
+    filteredItems
   } = props;
 
   const beforeUpload = () => true;
@@ -86,7 +89,7 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
       <Row>
         <Breadcrumb>
           <Breadcrumb.Item>
-            <a onClick={goBack}>工程变更 </a>{" "}
+            <a onClick={goBack}>商品计划 </a>{" "}
           </Breadcrumb.Item>
           <Breadcrumb.Item>{refItem.ref_title}</Breadcrumb.Item>
         </Breadcrumb>
@@ -101,18 +104,21 @@ const TodoTopBar: React.SFC<ITodoTopBarProps> = props => {
           />
         </Col>
         <Col span={12}>
-          <Button onClick={onExport}>导出</Button>
           {checkPermission("CreateEvent", user) && (
             <span>
               <Button onClick={onNew}>新建</Button>
               <Upload {...uploadProps}>
                 <Button>上载</Button>
               </Upload>
-              <Button onClick={doPublish}>发布</Button>
+              <Button onClick={doPublish}>发送邮件通知</Button>
             </span>
           )}
-
+          {/* <Button onClick={onExport}>导出</Button> */}
           <Button onClick={goBack}>返回</Button>
+
+          <CSVLink data={filteredItems} filename={"任务清单"} target="_blank">
+            下载
+          </CSVLink>
         </Col>
       </Row>
     </div>
@@ -339,20 +345,22 @@ class TodoMgmt extends React.Component<ITodoMgmtProps, ITodoMgmtStates> {
   };
 
   public doPublish = async () => {
-    const { refItem } = this.props;
-    // console.log(refItem);
+    // const { refItem } = this.props;
+    // // console.log(refItem);
 
-    const result = await eventService.notify(refItem.ref_id);
-    if ("err" in result) {
-      return;
-    }
-    const { data } = result;
-    if (data.rtnCode !== 0) {
-      message.error("通知发送失败");
-      return;
-    }
+    // const result = await eventService.notify(refItem.ref_id);
+    // if ("err" in result) {
+    //   return;
+    // }
+    // const { data } = result;
+    // if (data.rtnCode !== 0) {
+    //   message.error("通知发送失败");
+    //   return;
+    // }
 
-    message.success("通知发送成功");
+    // message.success("通知发送成功");
+
+    message.success("尚未提供邮件服务器，暂不能给责任人发送邮件。");
   };
 
   // 显示完成确认框
@@ -493,7 +501,8 @@ class TodoMgmt extends React.Component<ITodoMgmtProps, ITodoMgmtStates> {
       onExport: this.onExport,
       onNew: this.onNew,
       goBack,
-      doPublish: this.doPublish
+      doPublish: this.doPublish,
+      filteredItems
     };
 
     // feedback 只需要一个 prop: 该 feedback 的父元素，也即：当前元素

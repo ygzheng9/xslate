@@ -53,6 +53,23 @@
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/@csstools/sass-import-resolve/download/@csstools/sass-import-resolve-1.0.0.tgz#32c3cdb2f7af3cd8f0dca357b592e7271f3831b5"
 
+"@fortawesome/fontawesome-common-types@^0.2.0-9":
+  version "0.2.0"
+  resolved "http://registry.npm.taobao.org/@fortawesome/fontawesome-common-types/download/@fortawesome/fontawesome-common-types-0.2.0.tgz#6bcf6481030f59e7ffd1a40a67cd464d47780f6a"
+
+"@fortawesome/fontawesome-svg-core@^1.2.0-14":
+  version "1.2.0-14"
+  resolved "http://registry.npm.taobao.org/@fortawesome/fontawesome-svg-core/download/@fortawesome/fontawesome-svg-core-1.2.0-14.tgz#48100da29b39658fad374ebd1386161ab35af564"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.0-9"
+
+"@fortawesome/react-fontawesome@^0.1.0-11":
+  version "0.1.0-11"
+  resolved "http://registry.npm.taobao.org/@fortawesome/react-fontawesome/download/@fortawesome/react-fontawesome-0.1.0-11.tgz#83299a5c09bec79522abba33e93bff796f2f6d4e"
+  dependencies:
+    humps "^2.0.1"
+    prop-types "^15.5.10"
+
 "@types/history@*":
   version "4.6.2"
   resolved "http://registry.npm.taobao.org/@types/history/download/@types/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
@@ -3747,6 +3764,10 @@ humanize-ms@^1.2.0:
   dependencies:
     ms "^2.0.0"
 
+humps@^2.0.1:
+  version "2.0.1"
+  resolved "http://registry.npm.taobao.org/humps/download/humps-2.0.1.tgz#dd02ea6081bd0568dc5d073184463957ba9ef9aa"
+
 iconv-lite@0.4.19:
   version "0.4.19"
   resolved "http://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
@@ -6967,6 +6988,10 @@ react-app-rewired@^1.4.1:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
 
+react-csv@^1.0.14:
+  version "1.0.14"
+  resolved "http://registry.npm.taobao.org/react-csv/download/react-csv-1.0.14.tgz#7c9e444fc4c3ca1e1cf73a81129b1ec032838a71"
+
 react-dev-utils@^5.0.1:
   version "5.0.1"
   resolved "http://registry.npm.taobao.org/react-dev-utils/download/react-dev-utils-5.0.1.tgz#1f396e161fe44b595db1b186a40067289bf06613"
@@ -7002,12 +7027,6 @@ react-dom@^16.4.0:
 react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "http://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
-
-react-fontawesome@^1.6.1:
-  version "1.6.1"
-  resolved "http://registry.npm.taobao.org/react-fontawesome/download/react-fontawesome-1.6.1.tgz#eddce17e7dc731aa09fd4a186688a61793a16c5c"
-  dependencies:
-    prop-types "^15.5.6"
 
 react-lazy-load@^3.0.12:
   version "3.0.13"

@@ -35,13 +35,14 @@ class TodoForm extends React.Component<ITodoFormProps, any> {
     super(props);
   }
 
-  public checkUser = (value: any, callback: any) => {
-    if (value.name.length > 0) {
-      callback();
-      return;
-    }
-    callback("请输入发起人!");
-  };
+  // public checkUser = (rule: any, value: any, callback: any) => {
+  //   // console.log("value: ", value);
+  //   if (value.length > 0) {
+  //     callback();
+  //     return;
+  //   }
+  //   callback("请输入发起人!");
+  // };
 
   // 点击确定
   public handleOk = async () => {
@@ -57,7 +58,7 @@ class TodoForm extends React.Component<ITodoFormProps, any> {
     };
 
     // 从自定义的控件中，获取责任人的名字
-    data.owner_name = data.owner.name;
+    // data.owner_name = data.owner.name;
     data.due_date = moment(data.due_date).format("YYYY-MM-DD");
 
     onOk(data);
@@ -94,9 +95,9 @@ class TodoForm extends React.Component<ITodoFormProps, any> {
               initialValue: item.id
             })(<Input type="hidden" />)}
             <FormItem label="责任人" hasFeedback={true} {...formItemLayout}>
-              {getFieldDecorator("owner", {
-                initialValue: { name: item.owner_name },
-                rules: [{ validator: this.checkUser }]
+              {getFieldDecorator("owner_name", {
+                initialValue: item.owner_name,
+                rules: [{ required: true, message: "请输入责任人" }]
               })(<Input />)}
             </FormItem>
 

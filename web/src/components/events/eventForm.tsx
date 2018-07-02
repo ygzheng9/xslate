@@ -118,10 +118,10 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
     //   owner = user.name
     // }
 
-    let owner = user.name;
-    if ("user_name" in item) {
-      owner = item.user_name;
-    }
+    // let owner = user.name;
+    // if ("user_name" in item) {
+    //   owner = item.user_name;
+    // }
 
     const { deptOptions } = this.state;
 
@@ -133,7 +133,7 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
           })(<Input type="hidden" />)}
           <FormItem label="类型" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator("type", {
-              initialValue: item.type || "ECN",
+              initialValue: item.type || "商品计划",
               rules: [
                 {
                   required: true
@@ -141,15 +141,14 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
               ]
             })(
               <Select placeholder="请选择类型" disabled={readOnly}>
-                <Option value="会议">会议</Option>
-                <Option value="ECN">ECN</Option>
-                <Option value="工作计划">工作计划</Option>
+                <Option value="商品计划">商品计划</Option>
+                <Option value="月度会议">月度会议</Option>
               </Select>
             )}
           </FormItem>
           <FormItem label="部门" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator("department", {
-              initialValue: item.department || "质量部",
+              initialValue: item.department || "商品计划部",
               rules: [
                 {
                   required: true
@@ -162,9 +161,9 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
             )}
           </FormItem>
           <FormItem label="发起人" hasFeedback={true} {...formItemLayout}>
-            {getFieldDecorator("user", {
-              initialValue: { name: owner },
-              rules: [{ validator: this.checkUser }]
+            {getFieldDecorator("user_name", {
+              initialValue: item.user_name || user.name,
+              rules: [{ required: true, message: "请输入发起人" }]
             })(<Input disabled={readOnly} />)}
           </FormItem>
           <FormItem label="时间" hasFeedback={true} {...formItemLayout}>
@@ -188,16 +187,16 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
               rules: [{ required: true, message: "请输入主题" }]
             })(<Input disabled={readOnly} />)}
           </FormItem>
-          <FormItem label="地点" hasFeedback={true} {...formItemLayout}>
+          {/* <FormItem label="地点" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator("place", {
               initialValue: item.place
             })(<Input disabled={readOnly} />)}
-          </FormItem>
-          <FormItem label="料号信息" hasFeedback={true} {...formItemLayout}>
+          </FormItem> */}
+          {/* <FormItem label="料号信息" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator("material_desc", {
               initialValue: item.material_desc
             })(<TextArea rows={4} disabled={readOnly} />)}
-          </FormItem>
+          </FormItem> */}
 
           <FormItem label="详细内容" hasFeedback={true} {...formItemLayout}>
             {getFieldDecorator("memo", {

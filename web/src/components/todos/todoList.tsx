@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { Button, Divider, Popconfirm, Tooltip } from "antd";
+import { Button, Divider, Icon, Popconfirm, Tooltip } from "antd";
 
-import FontAwesome from "react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import * as moment from "moment";
 
@@ -61,11 +61,20 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有责任人可以修改状态
         let modifyDom: JSX.Element = <div />;
+
+        console.log(
+          "user.name: ",
+          user.name,
+          " owner_name: ",
+          record.owner_name
+        );
+
         if (user.name === record.owner_name && record.status === "") {
           modifyDom = (
             <span>
               <a onClick={showMarkWrap(record)}>
-                <FontAwesome name="flag" />
+                {/* <FontAwesomeIcon icon="flag" /> */}
+                <Icon type="flag" />
               </a>
             </span>
           );
@@ -148,12 +157,16 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有创建人可以修改，删除
         let modifyDom: JSX.Element = <div />;
-        if (user.name === record.create_user && record.status === "") {
+
+        // 忽略掉 用户的 判定
+        // user.name === record.create_user &&
+        if (record.status === undefined || record.status === "") {
           modifyDom = (
             <span>
               <Divider type="vertical" />
               <a onClick={onEditWrap(record)}>
-                <FontAwesome name="pencil" />
+                {/* <FontAwesomeIcon icon="pencil" /> */}
+                <Icon type="edit" />
               </a>
               <Divider type="vertical" />
               <Popconfirm
@@ -161,7 +174,8 @@ const TodoList: React.SFC<ITodoListProps> = props => {
                 onConfirm={onDeleteWrap(record.id, "cancel")}
               >
                 <a>
-                  <FontAwesome name="trash" />
+                  {/* <FontAwesomeIcon icon="trash" /> */}
+                  <Icon type="delete" />
                 </a>
               </Popconfirm>
             </span>

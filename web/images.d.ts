@@ -10,6 +10,8 @@ declare module "dva-loading";
 
 declare module "react-fontawesome";
 
+declare module "react-csv";
+
 // declare var require: {
 //   <T>(path: string): T;
 //   (paths: string[], callback: (...modules: any[]) => void): void;

@@ -13,14 +13,18 @@ export const stringSorter = (a: string, b: string): number => {
 
 // 检查 user 是否有 key 的权限
 export function checkPermission(key: string, user: any) {
-  if ("permissions" in user) {
-    const permissions = user.permissions;
-    if (permissions.indexOf(key) !== -1) {
-      return true;
-    }
-  }
+  // 正常逻辑
+  // if ("permissions" in user) {
+  //   const permissions = user.permissions;
+  //   if (permissions.indexOf(key) !== -1) {
+  //     return true;
+  //   }
+  // }
 
-  return false;
+  // return false;
+
+  // 演示逻辑，全权限
+  return true;
 }
 
 // 日期的统一格式

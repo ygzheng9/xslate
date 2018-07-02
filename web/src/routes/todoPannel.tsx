@@ -7,6 +7,7 @@ import {
   Button,
   Col,
   Divider,
+  Icon,
   Input,
   message,
   Modal,
@@ -14,7 +15,7 @@ import {
   Tooltip
 } from "antd";
 
-import FontAwesome from "react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import * as moment from "moment";
 
@@ -105,11 +106,13 @@ const TodoList: React.SFC<ITodoListProps> = props => {
       render: (text, record) => {
         // 只有责任人可以修改状态
         let modifyDom: JSX.Element = <div />;
+
         if (user.name === record.owner_name && record.status === "") {
           modifyDom = (
             <span>
               <a onClick={showMarkWrap(record)}>
-                <FontAwesome name="flag" />
+                {/* <FontAwesomeIcon icon="flag" /> */}
+                <Icon type="flag" />
               </a>
             </span>
           );

@@ -96,10 +96,11 @@ const RenderMessages: React.SFC<IRenderMessagesProps> = props => {
     return (
       <Col span={6} key={m.objectId}>
         <div className="message" onClick={selectMessage(m)}>
-          <p>{`${m.text} / ${imgCount}`}</p>
-          <p>{`${moment(m.created).toNow()} ${
+          <div>{`${m.text}`}</div>
+          <div>{`照片：${imgCount} 张`}</div>
+          <div>{`${moment(m.created).toNow()} ${
             m.location ? m.location : ""
-          }`}</p>
+          }`}</div>
         </div>
       </Col>
     );
@@ -215,7 +216,7 @@ class ThreadsMgmt extends React.Component<any, IThreadsMgmtStates> {
       const distImgs = _.uniq(allImgs);
 
       const imgsTag = distImgs.map(i => (
-        <div>
+        <div key={i}>
           <img key={i} className="modalPic" src={client.signatureUrl(i)} />
         </div>
       ));

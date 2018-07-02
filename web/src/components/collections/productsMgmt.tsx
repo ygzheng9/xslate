@@ -356,8 +356,9 @@ class ProductsMgmt extends React.Component<
         <Col span={8} key={p.objectId}>
           <div>
             <div className="message" onClick={this.selectProduct(p)}>
-              <p>{`${p.name} / ${imgCount}`}</p>
-              <p>{`${moment(p.createdAt).toNow()} ${p.detail}`}</p>
+              <div>{`${p.name} `}</div>
+              <div>{`照片：${imgCount} 张`}</div>
+              <div>{`${moment(p.createdAt).toNow()} ${p.detail}`}</div>
             </div>
           </div>
         </Col>
@@ -379,7 +380,8 @@ class ProductsMgmt extends React.Component<
         <Col span={8} key={a.id}>
           <div>
             <div className="message" onClick={this.selectAssortment(a)}>
-              <p>{`${a.name} / ${cnt}`}</p>
+              <div>{`${a.name} `}</div>
+              <div>{`照片：${cnt} 张`}</div>
             </div>
           </div>
         </Col>
