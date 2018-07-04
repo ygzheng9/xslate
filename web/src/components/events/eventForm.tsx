@@ -81,7 +81,7 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
 
     // 从自定义控件中，获取用户的名字
     // 自定义控件对应 user，是一个 object
-    inputData.user_name = inputData.user.name;
+    // inputData.user_name = inputData.user.name;
     inputData.happen_at = moment(item.happen_at).format("YYYY-MM-DD HH:mm:ss");
 
     // console.log(inputData)
@@ -90,13 +90,13 @@ class EventForm extends React.Component<IEventFormProps, IEventFormStates> {
     onOk(inputData);
   };
 
-  public checkUser = (rule: any, value: any, callback: any) => {
-    if (value.name.length > 0) {
-      callback();
-      return;
-    }
-    callback("请输入发起人!");
-  };
+  // public checkUser = (rule: any, value: any, callback: any) => {
+  //   if (value.name.length > 0) {
+  //     callback();
+  //     return;
+  //   }
+  //   callback("请输入发起人!");
+  // };
 
   public render() {
     const {
